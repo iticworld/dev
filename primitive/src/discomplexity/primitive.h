@@ -30,6 +30,21 @@ extern const char * primitive_type_string_get(const primitive_t * p);
 extern primitive_t * primitive_del(primitive_t * o, uint32 flags);
 
 extern primitive_t * primitive_int8_new(primitive_t * o, int8 v);
+extern primitive_t * primitive_int16_new(primitive_t * o, int16 v);
+extern primitive_t * primitive_int32_new(primitive_t * o, int32 v);
+extern primitive_t * primitive_int64_new(primitive_t * o, int64 v);
+extern primitive_t * primitive_uint8_new(primitive_t * o, uint8 v);
+extern primitive_t * primitive_uint16_new(primitive_t * o, uint16 v);
+extern primitive_t * primitive_uint32_new(primitive_t * o, uint32 v);
+extern primitive_t * primitive_uint64_new(primitive_t * o, uint64 v);
+
 extern int8 primitive_int8_get(primitive_t * o);
+extern int16 primitive_int16_get(primitive_t * o);
+extern int32 primitive_int32_get(primitive_t * o);
+extern int64 primitive_int64_get(primitive_t * o);
+extern uint8 primitive_uint8_get(primitive_t * o);
+extern uint16 primitive_uint16_get(primitive_t * o);
+extern uint32 primitive_uint32_get(primitive_t * o);
+extern uint64 primitive_uint64_get(primitive_t * o);
 
 #endif // __DISCOMPLEXITY__PRIMITIVE__H__

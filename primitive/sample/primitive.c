@@ -70,5 +70,12 @@ int main()
   printf("primitive value is %lx\n", primitive_uint64_get(&o));
   primitive_del(&o, NONE);
   printf("primitive type is %s\n", primitive_type_string_get(&o));
+
+  // STRING
+  primitive_string_new(&o, "hello world");
+  printf("primitive type is %s\n", primitive_type_string_get(&o));
+  printf("primitive value is %s\n", primitive_string_get(&o));
+  primitive_del(&o, NONE);
+  printf("primitive type is %s\n", primitive_type_string_get(&o));
   return 0;
 }

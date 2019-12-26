@@ -5,7 +5,8 @@ project(discomplexity-primitive)
 include_directories(src)
 
 set(sources src/discomplexity.c
-            src/discomplexity/primitive.c)
+            src/discomplexity/primitive.c
+            src/discomplexity/primitive/string.c)
 
 set(headers src/discomplexity.h
             src/discomplexity/primitive.h)

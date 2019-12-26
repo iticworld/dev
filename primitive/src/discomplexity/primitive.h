@@ -22,6 +22,7 @@ typedef struct __primitive_t primitive_t;
 #define PRIMITIVE_TYPE_UINT16   6
 #define PRIMITIVE_TYPE_UINT32   7
 #define PRIMITIVE_TYPE_UINT64   8
+#define PRIMITIVE_TYPE_STRING   9
 
 #define PRIMITIVE_NULL          { PRIMITIVE_TYPE_NONE, 0 }
 
@@ -46,5 +47,9 @@ extern uint8 primitive_uint8_get(primitive_t * o);
 extern uint16 primitive_uint16_get(primitive_t * o);
 extern uint32 primitive_uint32_get(primitive_t * o);
 extern uint64 primitive_uint64_get(primitive_t * o);
+
+extern primitive_t * primitive_string_new(primitive_t * o, const char * s);
+extern primitive_t * primitive_string_del(primitive_t * o, uint32 flags);
+extern const char * primitive_string_get(primitive_t * o);
 
 #endif // __DISCOMPLEXITY__PRIMITIVE__H__

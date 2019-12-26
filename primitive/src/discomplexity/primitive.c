@@ -44,6 +44,7 @@ primitive_t * primitive_del(primitive_t * o, uint32 flags)
       case PRIMITIVE_TYPE_UINT16: return primitive_uint16_del(o, flags);
       case PRIMITIVE_TYPE_UINT32: return primitive_uint32_del(o, flags);
       case PRIMITIVE_TYPE_UINT64: return primitive_uint64_del(o, flags);
+      case PRIMITIVE_TYPE_STRING: return primitive_string_del(o, flags);
       default: assert(0);
     }
   }

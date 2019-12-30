@@ -1,0 +1,105 @@
+
+<!doctype html>
+<html>
+
+<head>
+    <title>Scatter Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" type="text/javascript"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+<div style="width:75%">
+    <canvas id="canvas" style="margin-top:20px;"></canvas>
+</div>
+<script>
+    var data = {
+        datasets: [{
+            label: 'RED',
+            radius: 6,
+            borderColor: '#FF0000',
+            backgroundColor: '#FF0000',
+            data: [{x:17,y:5,v:35,c:1},{x:13,y:3,v:27,c:1},{x:21,y:3,v:49,c:1},{x:29,y:3,v:72,c:1},{x:45,y:3,v:90,c:1},{x:3,y:2,v:2,c:1},{x:7,y:2,v:15,c:1},{x:10,y:1,v:23,c:1},{x:16,y:1,v:30,c:1},{x:18,y:1,v:36,c:1},{x:26,y:1,v:63,c:1},{x:28,y:1,v:68,c:1},{x:32,y:1,v:82,c:1}]
+        },{
+            label: 'BLACK',
+            radius: 6,
+            borderColor: '#000000',
+            backgroundColor: '#000000',
+            data:  [{x:33,y:6,v:83,c:0},{x:49,y:5,v:92,c:0},{x:9,y:4,v:21,c:0},{x:25,y:4,v:62,c:0},{x:41,y:4,v:86,c:0},{x:57,y:4,v:93,c:0},{x:5,y:3,v:11,c:0},{x:11,y:2,v:26,c:0},{x:15,y:2,v:29,c:0},{x:19,y:2,v:40,c:0},{x:23,y:2,v:59,c:0},{x:27,y:2,v:67,c:0},{x:31,y:2,v:77,c:0}]
+        }]
+    };
+
+    var ctx = document.getElementById('canvas').getContext('2d');
+
+    Chart.plugins.register({
+        afterDatasetsDraw: function(chart) {
+            var ctx = chart.ctx;
+
+            chart.data.datasets.forEach(function(dataset, i) {
+                var meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function(element, index) {
+                        // Draw the text in black, with the specified font
+                        ctx.fillStyle = 'rgb(0, 0, 0)';
+
+                        var fontSize = 16;
+                        var fontStyle = 'normal';
+                        var fontFamily = 'Helvetica Neue';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                        // Just naively convert to string for now
+                        var dataString = (dataset.data[index].c === 1 ? "R("+dataset.data[index].v + ")" : "B("+dataset.data[index].v + ")");
+
+                        // Make sure alignment settings are correct
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+
+                        var padding = 5;
+                        var position = element.tooltipPosition();
+                        ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                    });
+                }
+            });
+        }
+    });
+
+    new Chart(ctx, {
+        type: 'scatter',
+        data: data,
+        options: {
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].v;
+                    }
+                }
+            },
+            legend: {
+                display: true,
+                position: 'left',
+                labels: {
+                    padding: 10
+                }
+            },
+            scales: {
+                yAxes: [{
+                    display: true,
+                    ticks: {
+                        max: 10,
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+</script>
+</body>
+
+</html>

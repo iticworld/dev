@@ -1,0 +1,40 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 26.
+ */
+
+#ifndef   __NOVEMBERIZING__INTEGER_TO__HP__
+#define   __NOVEMBERIZING__INTEGER_TO__HP__
+
+#include <novemberizing.hh>
+
+namespace novemberizing
+{
+//    inline string integer::to::hexadecimal(const integer & o)
+//    {
+//        string v = integer::is::plus(o) ? "" : "-";
+//        for(uint64 i = o.size() - 1; i != (uint64)(-1L); i--)
+//        {
+//            v += string::format("%lX", o.at(i));
+//        }
+//        return v;
+//    }
+//
+//    inline integer::to & integer::to::operator=(const to & o){ return *this; }
+//    inline integer::to & integer::to::operator=(to && o) noexcept { return *this; }
+//    inline integer::to::to(){}
+//    inline integer::to::to(const to & o){}
+//    inline integer::to::to(to && o) noexcept {}
+//    inline integer::to::~to(){}
+//    public:     static ;
+//    public:     to & operator=(const to & o);
+//    public:     to & operator=(to && o) noexcept;
+//    public:     to();
+//    public:     to(const to & o);
+//    public:     to(to && o) noexcept;
+//    public:     virtual ~to();
+}
+
+#endif // __NOVEMBERIZING__INTEGER_TO__HP__

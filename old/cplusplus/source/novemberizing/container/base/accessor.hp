@@ -1,0 +1,62 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 6.
+ */
+
+#ifndef   __NOVEMBERIZING__CONTAINER_ACCESSOR__HP__
+#define   __NOVEMBERIZING__CONTAINER_ACCESSOR__HP__
+
+#include <novemberizing/container.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    uint64 container::base<T>::accessor::previous(container::base<T> * p, uint64 i)
+    {
+        return p != nullptr ? p->previous(i) : 0;
+    }
+
+    template <typename T>
+    uint64 container::base<T>::accessor::next(container::base<T> * p, uint64 i)
+    {
+        return p != nullptr ? p->next(i) : 0;
+    }
+
+    template <typename T>
+    T & container::base<T>::accessor::reference(container::base<T> * p, uint64 i)
+    {
+        if(p != nullptr)
+        {
+            return p->reference(i);
+        }
+        throw exception();
+    }
+
+    template <typename T>
+    T * container::base<T>::accessor::pointer(container::base<T> * p, uint64 i)
+    {
+        return p != nullptr ? p->pointer(i) : nullptr;
+    }
+
+    template <typename T>
+    container::base<T>::accessor::accessor(){}
+
+    template <typename T>
+    container::base<T>::accessor::accessor(const accessor & o){}
+
+    template <typename T>
+    container::base<T>::accessor::accessor(accessor && o) noexcept {}
+
+    template <typename T>
+    container::base<T>::accessor::~accessor(){}
+
+    template <typename T>
+    typename container::base<T>::accessor & container::base<T>::accessor::operator=(const accessor & o) { return *this; }
+
+    template <typename T>
+    typename container::base<T>::accessor & container::base<T>::accessor::operator=(accessor && o) noexcept { return *this; }
+}
+
+#endif // __NOVEMBERIZING__CONTAINER_ACCESSOR__HP__

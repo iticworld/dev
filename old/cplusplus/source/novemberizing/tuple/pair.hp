@@ -1,0 +1,85 @@
+/**
+ *
+ * @author      novemberizing <developer@novemberizing.net>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__TUPLE_PAIR__HP__
+#define   __NOVEMBERIZING__TUPLE_PAIR__HP__
+
+#include <novemberizing/tuple/pair.hh>
+
+namespace novemberizing
+{
+    namespace tuple
+    {
+        template <typename A, typename B>
+        pair<A, B>::pair() : single<A>(), second()
+        {
+        }
+
+        template <typename A, typename B>
+        pair<A, B>::pair(const A & a, const B & b) : single<A>(a), second(b)
+        {
+
+        }
+
+        template <typename A, typename B>
+        pair<A, B>::pair(const A & a, B && b) : single<A>(a), second(move(b))
+        {
+
+        }
+
+        template <typename A, typename B>
+        pair<A, B>::pair(A && a, const B & b) : single<A>(move(a)), second(b)
+        {
+
+        }
+
+        template <typename A, typename B>
+        pair<A, B>::pair(A && a, B && b) : single<A>(move(a)), second(move(b))
+        {
+
+        }
+
+        template <typename A, typename B>
+        pair<A, B>::pair(const pair<A, B> & o) : single<A>(o.first), second(o.second)
+        {
+        }
+
+        template <typename A, typename B>
+        pair<A, B>::pair(pair<A, B> && o) noexcept : single<A>(move(o.first)), second(move(o.second))
+        {
+        }
+
+        template <typename A, typename B>
+        pair<A, B>::~pair()
+        {
+        }
+
+        template <typename A, typename B>
+        pair<A, B> & pair<A, B>::operator=(const pair<A, B> & o)
+        {
+            if(&o != this)
+            {
+                this->first = o.first;
+                this->second = o.second;
+            }
+            return *this;
+        }
+
+        template <typename A, typename B>
+        pair<A, B> & pair<A, B>::operator=(pair<A, B> && o) noexcept
+        {
+            if(&o != this)
+            {
+                this->first = move(o.first);
+                this->second = move(o.second);
+            }
+            return *this;
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__TUPLE_PAIR__HP__

@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>OPERATION RESEARCH 3.1.1</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" type="text/javascript"></script>
+    <style type="text/css">
+        @page { margin: 0.79in }
+        p { margin-bottom: 0.1in; line-height: 115% }
+    </style>
+</head>
+<body lang="en-US" dir="ltr">
+    <p style="margin-bottom: 0in; line-height: 100%">Consider the following objective function for a linear programming model:</p>
+    <p style="margin-bottom: 0in; line-height: 100%"><img src="operation.research.3.1.2_html_fdb2f9f288091c8d.gif" name="Object1" hspace="8" width="154" height="16"/></p>
+    <p style="margin-bottom: 0in; line-height: 100%">(a) Draw a graph that shows the corresponding objective function lines for Z = 6, Z = 12, and Z = 18.</p>
+    <p style="margin-bottom: 0in; line-height: 100%">(b) Find the slope-intercept form of the equation for each of these three objective function lines. Compare the slope for these three lines. Also compare the intercept with the <img src="operation.research.3.1.2_html_d0652d4eb0023a31.gif" name="Object2" hspace="8" width="21" height="16"/> axis.</p>
+    <p style="margin-bottom: 0in; line-height: 100%"><br/></p>
+    <canvas id="solution" style="width:200px; height:100px;"></canvas>
+    <script>
+        var chart = new Chart(document.getElementById("solution"), {
+			type: "line",
+			data: {
+				labels: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9" ],
+				datasets: [
+					{
+
+						data: [ 2, 4/3, 2/3, 0 ],
+						label: "equation one",
+						borderColor: "rgb(75, 192, 192)",
+						fill: true
+					},
+					{
+						data: [ 4, 10/3, 8/3, 2, 4/3, 2/3, 0 ],
+						label: "equation tow",
+						borderColor: "rgb(192, 75, 192)",
+						fill: true
+					},
+					{
+						data: [ 6, 16/3, 14/3, 4, 10/3, 8/3, 2, 4/3, 2/3, 0 ],
+						label: "equation three",
+						borderColor: "rgb(192, 192, 75)",
+						fill: true
+					}
+				]
+			},
+			options: {
+				legend: {
+					display: true,
+					position: 'top',
+					labels: {
+						boxWidth: 80,
+						fontColor: 'black'
+					}
+				},
+				scales: {
+					xAxes: [{
+						gridLines: {
+							display: false,
+							color: "black"
+						},
+						scaleLabel: {
+							display: true,
+							fontColor: "red"
+						}
+					}],
+					yAxes: [{
+						gridLines: {
+							color: "black",
+							borderDash: [2, 5],
+						},
+						scaleLabel: {
+							display: true,
+							fontColor: "green"
+						}
+					}]
+				}
+			}
+		});
+	</script>
+    <p style="margin-bottom: 0in; line-height: 100%"><br/></p>
+    <p style="margin-bottom: 0in; line-height: 100%"><img src="operation.research.3.1.2_html_56ace318a7bc2154.gif" name="Object3" hspace="8" width="83" height="31"/></p>
+    <p style="margin-bottom: 0in; line-height: 100%"><br/></p>
+    <p style="margin-bottom: 0in; line-height: 100%"> intercept = - 2/3</p>
+</body>
+</html>

@@ -1,0 +1,57 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__EVENT__HP__
+#define   __NOVEMBERIZING__EVENT__HP__
+
+#include <novemberizing/event.hh>
+
+namespace novemberizing
+{
+    event::~event()
+    {
+
+    }
+
+    event::event() : __type(static_cast<uint32>(invalid))
+    {
+
+    }
+
+    event::event(const event & o) : __type(o.__type)
+    {
+
+    }
+
+    event::event(event && o) noexcept : __type(o.__type)
+    {
+
+    }
+
+    event & event::operator=(const event & o)
+    {
+        if(&o != this)
+        {
+            __type = o.__type;
+        }
+        return *this;
+    }
+
+    event & event::operator=(event && o) noexcept
+    {
+        if(&o != this)
+        {
+            __type = o.__type;
+
+            o.__type = static_cast<uint32>(invalid);
+        }
+        return *this;
+    }
+}
+
+
+#endif // __NOVEMBERIZING__EVENT__HP__

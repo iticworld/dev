@@ -1,0 +1,46 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__OUTPUT__HP__
+#define   __NOVEMBERIZING__OUTPUT__HP__
+
+#include <novemberizing/output.hh>
+
+namespace novemberizing
+{
+    inline output::~output()
+    {
+
+    }
+
+    inline output::output()
+    {
+
+    }
+
+    inline output::output(const output & o)
+    {
+
+    }
+
+    inline output::output(output && o) noexcept
+    {
+
+    }
+
+    inline output & output::operator=(const output & o)
+    {
+        return *this;
+    }
+
+    inline output & output::operator=(output && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__OUTPUT__HP__

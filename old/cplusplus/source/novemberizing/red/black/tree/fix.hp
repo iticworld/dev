@@ -1,0 +1,165 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 14.
+ */
+
+#ifndef   __NOVEMBERIZING__RED_BLACK_TREE_FIX__HP__
+#define   __NOVEMBERIZING__RED_BLACK_TREE_FIX__HP__
+
+#include <novemberizing/red/black/tree.hh>
+
+namespace novemberizing
+{
+    namespace red
+    {
+        namespace black
+        {
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::fix::deletion(tree<T, TUPLE> * t, node * parent)
+            {
+                node * sibling = nullptr;
+                node * n = nullptr;
+                while(parent != nullptr && __color(n)==black)
+                {
+                    sibling = parent->right();
+                    if(n != sibling)
+                    {
+                        if(__color(sibling) == red)
+                        {
+                            sibling->c(parent->c());
+                            parent->c(red);
+                            rotate::left(t, parent);
+                            sibling = parent->right();
+                        }
+                        if(__color(sibling->right())==black)
+                        {
+                            if(__color(sibling->left())==black)
+                            {
+                                sibling->c(red);
+                                if(__color(parent) == black)
+                                {
+                                    n = parent;
+                                    parent = n->parent();
+                                    continue;
+                                }
+                                else
+                                {
+                                    parent->c(black);
+                                    break;
+                                }
+                            }
+                            sibling->c(red);
+                            __color(sibling->left(), black);
+                            rotate::right(t, sibling);
+                            sibling = parent->right();
+                        }
+                        sibling->c(parent->c());
+                        parent->c(black);
+                        __color(sibling->right(), black);
+                        rotate::left(t, parent);
+                        break;
+                    }
+                    else
+                    {
+                        sibling = parent->left();
+                        if(__color(sibling) == red)
+                        {
+                            sibling->c(parent->c());
+                            parent->c(red);
+                            rotate::right(t, parent);
+                            sibling = parent->left();
+                        }
+                        if(__color(sibling->left())==black)
+                        {
+                            if(__color(sibling->right())==black)
+                            {
+                                sibling->c(red);
+                                if(__color(parent) == black)
+                                {
+                                    n = parent;
+                                    parent = n->parent();
+                                    continue;
+                                }
+                                else
+                                {
+                                    parent->c(black);
+                                    break;
+                                }
+                            }
+                            sibling->c(red);
+                            __color(sibling->right(), black);
+                            rotate::left(t, sibling);
+                            sibling = parent->left();
+                        }
+                        sibling->c(parent->c());
+                        parent->c(black);
+                        __color(sibling->left(), black);
+                        rotate::right(t, parent);
+                        break;
+                    }
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::fix::insertion(tree<T, TUPLE> * t, node * n)
+            {
+                while(__color(n) == red && __color(n->parent()) == red)
+                {
+                    node * grandparent = __parent(n->parent());
+                    if(grandparent != nullptr)
+                    {
+                        node * uncle = grandparent->left() == n->parent() ? grandparent->right() : grandparent->left();
+                        if(__color(uncle) == red)
+                        {
+                            __color(grandparent, red);
+                            __color(__parent(n), black);
+                            __color(uncle, black);
+                            n = grandparent;
+                            continue;
+                        }
+                        if(grandparent->left() == n->parent())
+                        {
+                            if(__right(n->parent()) == n)
+                            {
+                                n = n->parent();
+                                rotate::left(t, n);
+                            }
+                            grandparent->c(red);
+                            __color(__parent(n), black);
+                            rotate::right(t, grandparent);
+                        }
+                        else
+                        {
+                            if(__left(n->parent()) == n)
+                            {
+                                n = n->parent();
+                                rotate::right(t, n);
+                            }
+                            grandparent->c(red);
+                            __color(__parent(n), black);
+                            rotate::left(t, grandparent);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            template <typename T, typename TUPLE> tree<T, TUPLE>::fix::~fix(){}
+            template <typename T, typename TUPLE> tree<T, TUPLE>::fix::fix(){}
+            template <typename T, typename TUPLE> tree<T, TUPLE>::fix::fix(const fix & o){}
+            template <typename T, typename TUPLE> tree<T, TUPLE>::fix::fix(fix && o) noexcept {}
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::fix & tree<T, TUPLE>::fix::operator=(const fix & o){ return *this; }
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::fix & tree<T, TUPLE>::fix::operator=(fix && o) noexcept { return *this; }
+
+
+//            protected:  class fix
+//            {
+//            public:     static void insertion(node * parent);
+//            public:     static void deletion(node * parent);
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__RED_BLACK_TREE_FIX__HP__

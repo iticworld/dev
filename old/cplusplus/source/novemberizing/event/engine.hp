@@ -1,0 +1,53 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__EVENT_ENGINE__HP__
+#define   __NOVEMBERIZING__EVENT_ENGINE__HP__
+
+#include <novemberizing/event.hh>
+
+namespace novemberizing
+{
+    event::executor event::engine::__executor;
+
+    inline void event::engine::run()
+    {
+        __executor.run();
+    }
+
+    inline event::engine::~engine()
+    {
+
+    }
+
+    inline event::engine::engine()
+    {
+
+    }
+
+    inline event::engine::engine(const engine & o)
+    {
+
+    }
+
+    inline event::engine::engine(engine && o) noexcept
+    {
+
+    }
+
+    inline event::engine & event::engine::operator=(const engine & o)
+    {
+        return *this;
+    }
+
+    inline event::engine & event::engine::operator=(engine && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__EVENT_ENGINE__HP__

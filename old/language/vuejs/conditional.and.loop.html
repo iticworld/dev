@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CONDITION AND LOOP</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <span v-if="seen">Now you see me</span>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            seen: true
+        }
+    });
+</script>
+<div id="loop">
+    <ol>
+        <li v-for="todo in todos">
+            {{ todo.text }}
+        </li>
+    </ol>
+</div>
+<script>
+    var loop = new Vue({
+        el: '#loop',
+        data: {
+            todos: [
+                { text: 'Learn JavaScript' },
+                { text: 'Learn Vue' },
+                { text: 'Build something awesome' }
+            ]
+        }
+    });
+</script>
+</body>
+</html>

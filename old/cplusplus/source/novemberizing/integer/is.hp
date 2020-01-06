@@ -1,0 +1,55 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 27.
+ */
+
+#ifndef   __NOVEMBERIZING__INTEGER_IS__HP__
+#define   __NOVEMBERIZING__INTEGER_IS__HP__
+
+#include <novemberizing.hh>
+
+namespace novemberizing
+{
+//    inline bool integer::is::plus(const integer & o){ return o.sign() == integer::plus; }
+//    inline bool integer::is::minus(const integer & o){ return o.sign() == integer::minus; }
+//    inline bool integer::is::nan(const integer & o){ return o.sign() == integer::nan; }
+//    inline byte integer::is::sign(const integer & o){ return o.sign(); }
+//    inline byte integer::is::sign(int8 v){ return v < 0 ? integer::minus : integer::plus; }
+//    inline byte integer::is::sign(int16 v){ return v < 0 ? integer::minus : integer::plus; }
+//    inline byte integer::is::sign(int32 v){ return v < 0 ? integer::minus : integer::plus; }
+//    inline byte integer::is::sign(int64 v){ return v < 0 ? integer::minus : integer::plus; }
+//    inline byte integer::is::sign(uint8 v){ return integer::plus; }
+//    inline byte integer::is::sign(uint16 v){ return integer::plus; }
+//    inline byte integer::is::sign(uint32 v){ return integer::plus; }
+//    inline byte integer::is::sign(uint64 v){ return integer::plus; }
+//
+//    inline integer::is::is()
+//    {
+//    }
+//
+//    inline integer::is::is(const is & o)
+//    {
+//    }
+//
+//    inline integer::is::is(is && o) noexcept
+//    {
+//    }
+//
+//    inline integer::is::~is()
+//    {
+//    }
+//
+//    inline integer::is & integer::is::operator=(const is & o)
+//    {
+//        return *this;
+//    }
+//
+//    inline integer::is & integer::is::operator=(is && o) noexcept
+//    {
+//        return *this;
+//    }
+}
+
+#endif // __NOVEMBERIZING__INTEGER_IS__HP__

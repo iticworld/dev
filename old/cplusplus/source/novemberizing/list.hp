@@ -1,0 +1,52 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 5.
+ */
+
+#ifndef   __NOVEMBERIZING__LIST__HP__
+#define   __NOVEMBERIZING__LIST__HP__
+
+#include <novemberizing/list.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    list<T>::list()
+    {
+
+    }
+
+    template <typename T>
+    list<T>::list(const list<T> & o)
+    {
+
+    }
+
+    template <typename T>
+    list<T>::list(list<T> && o) noexcept
+    {
+
+    }
+
+    template <typename T>
+    list<T>::~list()
+    {
+
+    }
+
+    template <typename T>
+    list<T> & list<T>::operator=(const list<T> & o)
+    {
+        return *this;
+    }
+
+    template <typename T>
+    list<T> & list<T>::operator=(list<T> && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__LIST__HP__

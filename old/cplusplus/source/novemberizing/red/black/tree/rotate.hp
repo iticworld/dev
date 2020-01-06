@@ -1,0 +1,59 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 14.
+ */
+
+#ifndef   __NOVEMBERIZING__RED_BLACK_TREE_ROTATE__HP__
+#define   __NOVEMBERIZING__RED_BLACK_TREE_ROTATE__HP__
+
+#include <novemberizing/red/black/tree.hh>
+
+namespace novemberizing
+{
+    namespace red
+    {
+        namespace black
+        {
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::rotate::left(tree<T, TUPLE> * t, node * n)
+            {
+                node * right = n->right();
+                node * child = __left(right);
+                t->__change(n, right);
+                n->parent(right);
+                right->left(n);
+                n->right(child);
+                if(child != nullptr)
+                {
+                    child->parent(n);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::rotate::right(tree<T, TUPLE> * t, node * n)
+            {
+                node * left = n->left();
+                node * child = __right(left);
+                t->__change(n, left);
+                n->parent(left);
+                left->right(n);
+                n->left(child);
+                if(child != nullptr)
+                {
+                    child->parent(n);
+                }
+            }
+
+            template <typename T, typename TUPLE> tree<T, TUPLE>::rotate::~rotate(){}
+            template <typename T, typename TUPLE> tree<T, TUPLE>::rotate::rotate(){}
+            template <typename T, typename TUPLE> tree<T, TUPLE>::rotate::rotate(const rotate & o){}
+            template <typename T, typename TUPLE> tree<T, TUPLE>::rotate::rotate(rotate && o) noexcept {}
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::rotate & tree<T, TUPLE>::rotate::operator=(const rotate & o){ return *this; }
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::rotate & tree<T, TUPLE>::rotate::operator=(rotate && o) noexcept { return *this; }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__RED_BLACK_TREE_ROTATE__HP__

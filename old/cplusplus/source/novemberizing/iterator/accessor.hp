@@ -1,0 +1,46 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 6.
+ */
+
+#ifndef   __NOVEMBERIZING__ITERATOR_ACCESSOR__HP__
+#define   __NOVEMBERIZING__ITERATOR_ACCESSOR__HP__
+
+#include <novemberizing/iterator.hh>
+
+namespace novemberizing
+{
+    template <typename T> iterator<T>::accessor::accessor() {}
+
+    template <typename T> iterator<T>::accessor::accessor(const accessor & o) {}
+
+    template <typename T> iterator<T>::accessor::accessor(accessor && o) noexcept {}
+
+    template <typename T> iterator<T>::accessor::~accessor() {}
+
+    template <typename T> typename iterator<T>::accessor & iterator<T>::accessor::operator=(accessor && o) noexcept { return *this; }
+
+    template <typename T> typename iterator<T>::accessor & iterator<T>::accessor::operator=(const accessor & o) { return *this; }
+
+    template <typename T>
+    iterator<T> iterator<T>::accessor::create(container::base<T> * p, uint64 i)
+    {
+        iterator<T> it;
+        it.__container = p;
+        it.__index = i;
+        return it;
+    }
+
+    template <typename T>
+    iterator<T> iterator<T>::accessor::create(const container::base<T> * p, uint64 i)
+    {
+        iterator<T> it;
+        it.__container = const_cast<container::base<T> *>(p);
+        it.__index = i;
+        return it;
+    }
+}
+
+#endif // __NOVEMBERIZING__ITERATOR_ACCESSOR__HP__

@@ -1,0 +1,65 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 7. 4.
+ */
+
+#ifndef   __NOVEMBERIZING__UUID__HP__
+#define   __NOVEMBERIZING__UUID__HP__
+
+#include <novemberizing/uuid.hh>
+
+namespace novemberizing
+{
+    inline uuid::~uuid()
+    {
+    }
+
+    inline uuid::uuid(uint64 first, uint64 second) noexcept : __first(first), __second(second)
+    {
+    }
+
+    inline uuid::uuid() : __first(0), __second(0)
+    {
+    }
+
+    inline uuid::uuid(const uuid & o) : __first(o.__first), __second(o.__second)
+    {
+    }
+
+    inline uuid::uuid(uuid && o) noexcept : __first(o.__first), __second(o.__second)
+    {
+        o.__first = 0;
+        o.__second = 0;
+    }
+
+    inline uuid & uuid::operator=(const uuid & o)
+    {
+        if(&o != this)
+        {
+            __first = o.__first;
+            __second = o.__second;
+        }
+        return *this;
+    }
+
+    inline uuid & uuid::operator=(uuid && o) noexcept
+    {
+        if(&o != this)
+        {
+            __first = o.__first;
+            __second = o.__second;
+
+            o.__first = 0;
+            o.__second = 0;
+        }
+        return *this;
+    }
+
+    inline uint64 uuid::first() const { return __first; }
+
+    inline uint64 uuid::second() const { return __second; }
+}
+
+#endif // __NOVEMBERIZING__UUID__HP__

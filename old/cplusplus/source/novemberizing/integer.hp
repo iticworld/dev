@@ -1,0 +1,738 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 26.
+ */
+
+#ifndef   __NOVEMBERIZING__INTEGER__HP__
+#define   __NOVEMBERIZING__INTEGER__HP__
+
+#include <novemberizing.hh>
+
+namespace novemberizing
+{
+//    inline const byte integer::nan = 0;
+//    inline const byte integer::plus = '+';
+//    inline const byte integer::minus = '-';
+//
+//    inline integer::integer() : __sign(nan), __value(nullptr), __size(0)
+//    {
+//    }
+//
+//    inline integer::integer(const integer & o) : __sign(nan), __value(nullptr), __size(0)
+//    {
+//        __sign = o.__sign;
+//        if(o.__size>0)
+//        {
+//            __size = o.__size;
+//            __value = memory::allocate<uint64>(__size);
+//            memory::copy<uint64>(__value, o.__value, __size);
+//        }
+//    }
+//
+//    inline integer::integer(integer && o) noexcept : __sign(o.__sign), __value(o.__value), __size(o.__size)
+//    {
+//        o.__sign = nan;
+//        o.__value = nullptr;
+//        o.__size = 0;
+//    }
+//
+//    inline integer::integer(int8 v) : __sign(v >=0 ? plus : minus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = (uint64) (v >= 0 ? v : (-v));
+//    }
+//
+//    inline integer::integer(int16 v) : __sign(v >=0 ? plus : minus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = (uint64) (v >= 0 ? v : (-v));
+//    }
+//
+//    inline integer::integer(int32 v) : __sign(v >=0 ? plus : minus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = (uint64) (v >= 0 ? v : (-v));
+//    }
+//
+//    inline integer::integer(int64 v) : __sign(v >=0 ? plus : minus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = (uint64) (v >= 0 ? v : (-v));
+//    }
+//
+//    inline integer::integer(uint8 v) : __sign(plus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = v;
+//    }
+//
+//    inline integer::integer(uint16 v) : __sign(plus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = v;
+//    }
+//
+//    inline integer::integer(uint32 v) : __sign(plus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = v;
+//    }
+//
+//    inline integer::integer(uint64 v) : __sign(plus), __value(nullptr), __size(1)
+//    {
+//        __value = memory::allocate<uint64>(__size);
+//        __value[0] = v;
+//    }
+//
+//    inline integer::~integer()
+//    {
+//        __sign = 0;
+//        __size = 0;
+//        __value = memory::deallocate<uint64>(__value);
+//    }
+//
+//    inline byte integer::sign() const { return __sign; }
+//    inline uint64 integer::size() const { return __size; }
+//
+//    inline uint64 & integer::at(uint64 i)
+//    {
+//        if(__size <= i)
+//        {
+//            throw exception();
+//        }
+//        return __value[i];
+//    }
+//
+//    inline const uint64 & integer::at(uint64 i) const
+//    {
+//        if(__size <= i)
+//        {
+//            throw exception();
+//        }
+//        return __value[i];
+//    }
+//
+//    inline integer & integer::set(int8 v) { return set((int64) v); }
+//    inline integer & integer::set(int16 v) { return set((int64) v); }
+//    inline integer & integer::set(int32 v) { return set((int64) v); }
+//    inline integer & integer::set(int64 v)
+//    {
+//        __sign = (v >= 0) ? plus : minus;
+//        __size = 1;
+//        __value = memory::allocate<uint64>(__value, __size);
+//        __value[0] = (uint64)((v >= 0) ? v : (-v));
+//        return *this;
+//    }
+//    inline integer & integer::set(uint8 v) { return set((uint64) v); }
+//    inline integer & integer::set(uint16 v) { return set((uint64) v); }
+//    inline integer & integer::set(uint32 v) { return set((uint64) v); }
+//    inline integer & integer::set(uint64 v)
+//    {
+//        __size = 1;
+//        __sign = plus;
+//        __value = memory::allocate<uint64>(__value, __size);
+//        __value[0] = v;
+//        return *this;
+//    }
+//
+//    inline integer & integer::set(const integer & v)
+//    {
+//        if(&v != this)
+//        {
+//            __sign = v.__sign;
+//            __size = v.__size;
+//            __value = memory::allocate<uint64>(__value, __size);
+//            memory::copy<uint64>(__value, v.__value, __size);
+//        }
+//        return *this;
+//    }
+//    inline integer & integer::set(integer && v) noexcept
+//    {
+//        if(&v != this)
+//        {
+//            __sign = v.__sign;
+//            __value = v.__value;
+//            __size = v.__size;
+//
+//            v.__sign = nan;
+//            v.__value = nullptr;
+//            v.__size = 0;
+//        }
+//        return *this;
+//    }
+//
+//    inline integer & integer::operator=(int8 v){ return set(v); }
+//    inline integer & integer::operator=(int16 v){ return set(v); }
+//    inline integer & integer::operator=(int32 v){ return set(v); }
+//    inline integer & integer::operator=(int64 v){ return set(v); }
+//    inline integer & integer::operator=(uint8 v){ return set(v); }
+//    inline integer & integer::operator=(uint16 v){ return set(v); }
+//    inline integer & integer::operator=(uint32 v){ return set(v); }
+//    inline integer & integer::operator=(uint64 v){ return set(v); }
+//    inline integer & integer::operator=(const integer & v){ return set(v); }
+//    inline integer & integer::operator=(integer && v) noexcept{ return set(v); }
+//
+//    inline bool operator==(const integer & x, const integer & y)
+//    {
+//        if(integer::is::nan(x) || integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != y.sign())
+//        {
+//            return false;
+//        }
+//        if(x.size() != y.size())
+//        {
+//            return false;
+//        }
+//        for(uint64 i = 0; i<x.size(); i++)
+//        {
+//            if(x.at(i) != y.at(i))
+//            {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//
+//    inline bool operator==(const integer & x, int8            y) { return operator==(x, (int64) y); }
+//    inline bool operator==(const integer & x, int16           y) { return operator==(x, (int64) y); }
+//    inline bool operator==(const integer & x, int32           y) { return operator==(x, (int64) y); }
+//    inline bool operator==(const integer & x, int64           y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return false;
+//        }
+//        if(x.size() != 1)
+//        {
+//            return false;
+//        }
+//        return x.at(0) == (y>=0 ? y : (-y));
+//    }
+//    inline bool operator==(const integer & x, uint8           y) { return operator==(x, (uint64) y); }
+//    inline bool operator==(const integer & x, uint16          y) { return operator==(x, (uint64) y); }
+//    inline bool operator==(const integer & x, uint32          y) { return operator==(x, (uint64) y); }
+//    inline bool operator==(const integer & x, uint64          y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return false;
+//        }
+//        if(x.size() != 1)
+//        {
+//            return false;
+//        }
+//        return x.at(0) == y;
+//    }
+//
+//    inline bool operator==(int8            x, const integer & y){ return operator==(y, x); }
+//    inline bool operator==(int16           x, const integer & y){ return operator==(y, x); }
+//    inline bool operator==(int32           x, const integer & y){ return operator==(y, x); }
+//    inline bool operator==(int64           x, const integer & y){ return operator==(y, x); }
+//    inline bool operator==(uint8           x, const integer & y){ return operator==(y, x); }
+//    inline bool operator==(uint16          x, const integer & y){ return operator==(y, x); }
+//    inline bool operator==(uint32          x, const integer & y){ return operator==(y, x); }
+//    inline bool operator==(uint64          x, const integer & y){ return operator==(y, x); }
+//
+//    inline bool operator!=(const integer & x, const integer & y)
+//    {
+//        if(integer::is::nan(x) || integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != y.sign())
+//        {
+//            return true;
+//        }
+//        if(x.size() != y.size())
+//        {
+//            return true;
+//        }
+//        for(uint64 i = 0; i<x.size(); i++)
+//        {
+//            if(x.at(i) != y.at(i))
+//            {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+//
+//    inline bool operator!=(const integer & x, int8            y) { return operator!=(x, (int64) y); }
+//    inline bool operator!=(const integer & x, int16           y) { return operator!=(x, (int64) y); }
+//    inline bool operator!=(const integer & x, int32           y) { return operator!=(x, (int64) y); }
+//    inline bool operator!=(const integer & x, int64           y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return true;
+//        }
+//        if(x.size() != 1)
+//        {
+//            return true;
+//        }
+//        return x.at(0) != (y>=0 ? y : (-y));
+//    }
+//
+//    inline bool operator!=(const integer & x, uint8           y) { return operator!=(x, (uint64) y); }
+//    inline bool operator!=(const integer & x, uint16          y) { return operator!=(x, (int64) y); }
+//    inline bool operator!=(const integer & x, uint32          y) { return operator!=(x, (int64) y); }
+//    inline bool operator!=(const integer & x, uint64          y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return true;
+//        }
+//        if(x.size() != 1)
+//        {
+//            return true;
+//        }
+//        return x.at(0) != y;
+//    }
+//    inline bool operator!=(int8            x, const integer & y) { return operator!=(y, x); }
+//    inline bool operator!=(int16           x, const integer & y) { return operator!=(y, x); }
+//    inline bool operator!=(int32           x, const integer & y) { return operator!=(y, x); }
+//    inline bool operator!=(int64           x, const integer & y) { return operator!=(y, x); }
+//    inline bool operator!=(uint8           x, const integer & y) { return operator!=(y, x); }
+//    inline bool operator!=(uint16          x, const integer & y) { return operator!=(y, x); }
+//    inline bool operator!=(uint32          x, const integer & y) { return operator!=(y, x); }
+//    inline bool operator!=(uint64          x, const integer & y) { return operator!=(y, x); }
+//
+//    inline bool operator< (const integer & x, const integer & y)
+//    {
+//        if(integer::is::nan(x) || integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != y.sign())
+//        {
+//            return integer::is::plus(y);
+//        }
+//        if(x.size() != y.size())
+//        {
+//            return integer::is::plus(y) ? y.size() > x.size() : y.size() < x.size();
+//        }
+//        for(uint64 i = x.size() - 1; i != (uint64)(-1); i--)
+//        {
+//            if(x.at(i) != y.at(i))
+//            {
+//                return integer::is::plus(y) ? y.at(i) > x.at(i) : y.at(i) < x.at(i);
+//            }
+//        }
+//        return false;
+//    }
+//
+//    inline bool operator< (const integer & x, int8            y) { return operator< (x, (int64) y); }
+//    inline bool operator< (const integer & x, int16           y) { return operator< (x, (int64) y); }
+//    inline bool operator< (const integer & x, int32           y) { return operator< (x, (int64) y); }
+//    inline bool operator< (const integer & x, int64           y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return integer::is::plus(y);
+//        }
+//        if(x.size() != 1)
+//        {
+//            return integer::is::minus(y);
+//        }
+//        return integer::is::plus(y) ? x.at(0) < y : x.at(0) > (-y);
+//    }
+//
+//    inline bool operator< (const integer & x, uint8           y) { return operator< (x, (uint64) y); }
+//    inline bool operator< (const integer & x, uint16          y) { return operator< (x, (uint64) y); }
+//    inline bool operator< (const integer & x, uint32          y) { return operator< (x, (uint64) y); }
+//    inline bool operator< (const integer & x, uint64          y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return integer::is::plus(y);
+//        }
+//        if(x.size() != 1)
+//        {
+//            return false;
+//        }
+//        return x.at(0) < y;
+//    }
+//
+//    inline bool operator< (int8            x, const integer & y) { return operator< ((int64) x, y); }
+//    inline bool operator< (int16           x, const integer & y) { return operator< ((int64) x, y); }
+//    inline bool operator< (int32           x, const integer & y) { return operator< ((int64) x, y); }
+//    inline bool operator< (int64           x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return integer::is::plus(y);
+//        }
+//        if(y.size() != 1)
+//        {
+//            return integer::is::plus(y);
+//        }
+//        return integer::is::plus(x) ? x < y.at(0) : (-x) > y.at(0);
+//    }
+//
+//    inline bool operator< (uint8           x, const integer & y) { return operator< ((uint64) x, y); }
+//    inline bool operator< (uint16          x, const integer & y) { return operator< ((uint64) x, y); }
+//    inline bool operator< (uint32          x, const integer & y) { return operator< ((uint64) x, y); }
+//    inline bool operator< (uint64          x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return false;
+//        }
+//        if(y.size() != 1)
+//        {
+//            return integer::is::plus(y);
+//        }
+//        return x < y.at(0);
+//    }
+//
+//    inline bool operator<=(const integer & x, const integer & y)
+//    {
+//        if(integer::is::nan(x) || integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != y.sign())
+//        {
+//            return integer::is::plus(y);
+//        }
+//        if(x.size() != y.size())
+//        {
+//            return integer::is::plus(y) ? y.size() > x.size() : y.size() < x.size();
+//        }
+//        for(uint64 i = x.size() - 1; i != (uint64)(-1); i--)
+//        {
+//            if(x.at(i) != y.at(i))
+//            {
+//                return integer::is::plus(y) ? y.at(i) > x.at(i) : y.at(i) < x.at(i);
+//            }
+//        }
+//        return true;
+//    }
+//
+//    inline bool operator<=(const integer & x, int8            y) { return operator<=(x, (int64) y); }
+//    inline bool operator<=(const integer & x, int16           y) { return operator<=(x, (int64) y); }
+//    inline bool operator<=(const integer & x, int32           y) { return operator<=(x, (int64) y); }
+//    inline bool operator<=(const integer & x, int64           y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return integer::is::plus(y);
+//        }
+//        if(x.size() != 1)
+//        {
+//            return integer::is::minus(y);
+//        }
+//        return integer::is::plus(y) ? x.at(0) <= y : x.at(0) >= (-y);
+//    }
+//
+//    inline bool operator<=(const integer & x, uint8           y) { return operator<=(x, (uint64) y); }
+//    inline bool operator<=(const integer & x, uint16          y) { return operator<=(x, (uint64) y); }
+//    inline bool operator<=(const integer & x, uint32          y) { return operator<=(x, (uint64) y); }
+//    inline bool operator<=(const integer & x, uint64          y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return true;
+//        }
+//        if(x.size() != 1)
+//        {
+//            return false;
+//        }
+//        return x.at(0) <= y;
+//    }
+//    inline bool operator<=(int8            x, const integer & y) { return operator<=((int64) x, y); }
+//    inline bool operator<=(int16           x, const integer & y) { return operator<=((int64) x, y); }
+//    inline bool operator<=(int32           x, const integer & y) { return operator<=((int64) x, y); }
+//    inline bool operator<=(int64           x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return integer::is::plus(y);
+//        }
+//        if(y.size() != 1)
+//        {
+//            return integer::is::plus(y);
+//        }
+//        return integer::is::plus(x) ? x <= y.at(0) : (-x) >= y.at(0);
+//    }
+//
+//    inline bool operator<=(uint8           x, const integer & y) { return operator<=((uint64) x, y); }
+//    inline bool operator<=(uint16          x, const integer & y) { return operator<=((uint64) x, y); }
+//    inline bool operator<=(uint32          x, const integer & y) { return operator<=((uint64) x, y); }
+//    inline bool operator<=(uint64          x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return false;
+//        }
+//        if(y.size() != 1)
+//        {
+//            return true;
+//        }
+//        return x <= y.at(0);
+//    }
+//
+//    inline bool operator> (const integer & x, const integer & y)
+//    {
+//        if(integer::is::nan(x) || integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != y.sign())
+//        {
+//            return integer::is::plus(x);
+//        }
+//        if(x.size() != y.size())
+//        {
+//            return integer::is::plus(x) ? x.size() >  y.size() : x.size() < y.size();
+//        }
+//        for(uint64 i = x.size() - 1; i != (uint64)(-1); i--)
+//        {
+//            if(x.at(i) != y.at(i))
+//            {
+//                return integer::is::plus(x) ? x.at(i) > y.at(i) : x.at(i) < y.at(i);
+//            }
+//        }
+//        return false;
+//    }
+//
+//    inline bool operator> (const integer & x, int8            y) { return operator> (x, (int64) y); }
+//    inline bool operator> (const integer & x, int16           y) { return operator> (x, (int64) y); }
+//    inline bool operator> (const integer & x, int32           y) { return operator> (x, (int64) y); }
+//    inline bool operator> (const integer & x, int64           y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return integer::is::plus(x);
+//        }
+//        if(x.size() != 1)
+//        {
+//            return integer::is::plus(x);
+//        }
+//        return integer::is::plus(y) ? x.at(0) > y : x.at(0) < (-y);
+//    }
+//
+//    inline bool operator> (const integer & x, uint8           y) { return operator> (x, (uint64) y); }
+//    inline bool operator> (const integer & x, uint16          y) { return operator> (x, (uint64) y); }
+//    inline bool operator> (const integer & x, uint32          y) { return operator> (x, (uint64) y); }
+//    inline bool operator> (const integer & x, uint64          y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return true;
+//        }
+//        if(x.size() != 1)
+//        {
+//            return false;
+//        }
+//        return x.at(0) > y;
+//    }
+//
+//    inline bool operator> (int8            x, const integer & y) { return operator> ((int64) x, y); }
+//    inline bool operator> (int16           x, const integer & y) { return operator> ((int64) x, y); }
+//    inline bool operator> (int32           x, const integer & y) { return operator> ((int64) x, y); }
+//    inline bool operator> (int64           x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return integer::is::plus(x);
+//        }
+//        if(y.size() != 1)
+//        {
+//            return integer::is::minus(x);
+//        }
+//        return integer::is::plus(x) ? x > y.at(0) : (-x) < y.at(0);
+//    }
+//
+//    inline bool operator> (uint8           x, const integer & y) { return operator> ((uint64) x, y); }
+//    inline bool operator> (uint16          x, const integer & y) { return operator> ((uint64) x, y); }
+//    inline bool operator> (uint32          x, const integer & y) { return operator> ((uint64) x, y); }
+//    inline bool operator> (uint64          x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return true;
+//        }
+//        if(y.size() != 1)
+//        {
+//            return false;
+//        }
+//        return x > y.at(0);
+//    }
+//
+//    inline bool operator>=(const integer & x, const integer & y)
+//    {
+//        if(integer::is::nan(x) || integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != y.sign())
+//        {
+//            return integer::is::plus(x);
+//        }
+//        if(x.size() != y.size())
+//        {
+//            return integer::is::plus(x) ? x.size() > y.size() : x.size() < y.size();
+//        }
+//        for(uint64 i = x.size() - 1; i != (uint64)(-1); i--)
+//        {
+//            if(x.at(i) != y.at(i))
+//            {
+//                return integer::is::plus(x) ? x.at(i) > y.at(i) : x.at(i) < y.at(i);
+//            }
+//        }
+//        return true;
+//    }
+//
+//    inline bool operator>=(const integer & x, int8            y) { return operator>=(x, (int64) y); }
+//    inline bool operator>=(const integer & x, int16           y) { return operator>=(x, (int64) y); }
+//    inline bool operator>=(const integer & x, int32           y) { return operator>=(x, (int64) y); }
+//    inline bool operator>=(const integer & x, int64           y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return integer::is::plus(x);
+//        }
+//        if(x.size() != 1)
+//        {
+//            return integer::is::plus(x);
+//        }
+//        return integer::is::plus(y) ? x.at(0) >= y : x.at(0) <= (-y);
+//    }
+//
+//    inline bool operator>=(const integer & x, uint8           y) { return operator>=(x, (uint64) y); }
+//    inline bool operator>=(const integer & x, uint16          y) { return operator>=(x, (uint64) y); }
+//    inline bool operator>=(const integer & x, uint32          y) { return operator>=(x, (uint64) y); }
+//    inline bool operator>=(const integer & x, uint64          y)
+//    {
+//        if(integer::is::nan(x))
+//        {
+//            throw exception();
+//        }
+//        if(x.sign() != integer::is::sign(y))
+//        {
+//            return false;
+//        }
+//        if(x.size() != 1)
+//        {
+//            return true;
+//        }
+//        return x.at(0) >= y;
+//    }
+//
+//    inline bool operator>=(int8            x, const integer & y) { return operator>=((int64) x, y); }
+//    inline bool operator>=(int16           x, const integer & y) { return operator>=((int64) x, y); }
+//    inline bool operator>=(int32           x, const integer & y) { return operator>=((int64) x, y); }
+//
+//    inline bool operator>=(int64           x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return integer::is::plus(x);
+//        }
+//        if(y.size() != 1)
+//        {
+//            return integer::is::minus(x);
+//        }
+//        return integer::is::plus(x) ? x >= y.at(0) : (-x) <= y.at(0);
+//    }
+//
+//    inline bool operator>=(uint8           x, const integer & y){ return operator>=((uint64) x, y); }
+//    inline bool operator>=(uint16          x, const integer & y){ return operator>=((uint64) x, y); }
+//    inline bool operator>=(uint32          x, const integer & y){ return operator>=((uint64) x, y); }
+//    inline bool operator>=(uint64          x, const integer & y)
+//    {
+//        if(integer::is::nan(y))
+//        {
+//            throw exception();
+//        }
+//        if(integer::is::sign(x) != y.sign())
+//        {
+//            return true;
+//        }
+//        if(y.size() != 1)
+//        {
+//            return false;
+//        }
+//        return x >= y.at(0);
+//    }
+}
+
+#endif // __NOVEMBERIZING__INTEGER__HP__

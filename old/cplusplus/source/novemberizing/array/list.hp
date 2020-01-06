@@ -1,0 +1,929 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 5.
+ */
+
+#ifndef   __NOVEMBERIZING__ARRAY_LIST__HP__
+#define   __NOVEMBERIZING__ARRAY_LIST__HP__
+
+#include <new>
+
+#include <novemberizing/array/list.hh>
+
+namespace novemberizing
+{
+    namespace array
+    {
+        template <typename T>
+        T * list<T>::_construct(T * destination, const T * source, uint64 n)
+        {
+            if(destination)
+            {
+                if(source)
+                {
+                    for(uint64 i = 0; i < n; i++)
+                    {
+                        ::new (&destination[i]) T(source[i]);
+                    }
+                }
+            }
+            return destination;
+        }
+
+        template <typename T>
+        T * list<T>::_construct(T * destination, const T & o)
+        {
+            if(destination)
+            {
+                ::new (destination) T(o);
+            }
+            return destination;
+        }
+
+        template <typename T>
+        T * list<T>::_construct(T * destination, T && o)
+        {
+            if(destination)
+            {
+                ::new (destination) T(move(o));
+            }
+            return destination;
+        }
+
+        template <typename T>
+        T * list<T>::_construct(T * destination, uint64 n, const T & o)
+        {
+            for(uint64 i = 0; i < n;i++)
+            {
+                ::new (&destination[i]) T(o);
+            }
+            return destination;
+        }
+
+        template <typename T>
+        T * list<T>::_construct(T * destination, uint64 n, T && o)
+        {
+            for(uint64 i = 0; i < n;i++)
+            {
+                ::new (&destination[i]) T(o);
+            }
+            return destination;
+        }
+
+        template <typename T>
+        T * list<T>::_destruct(T * destination)
+        {
+            if(destination)
+            {
+                destination->~T();
+            }
+            return destination;
+        }
+
+        template <typename T>
+        T * list<T>::_destruct(T * destination, uint64 n)
+        {
+            if(destination)
+            {
+                for(uint64 i = 0; i < n; i++)
+                {
+                    destination[i].~T();
+                }
+            }
+            return destination;
+        }
+
+        template <typename T>
+        list<T>::list()
+        {
+            __max = (container::max / sizeof(T));
+            __size = 0;
+            __page = container::page;
+            __capacity = capacity::get(__size, __page);
+            __data = core::memory::allocate<T>(__capacity);
+        }
+
+        template <typename T>
+        list<T>::list(uint64 size, const T & v)
+        {
+            __max = (container::max / sizeof(T));
+            __size = size;
+            __page = container::page;
+            __capacity = capacity::get(__size, __page);
+            __data = core::memory::allocate<T>(__capacity);
+            core::memory::fill<T>(__data, v, __size);
+        }
+
+        template <typename T>
+        list<T>::list(const list<T> & o)
+        {
+            __max = o.__max;
+            __size = o.__size;
+            __page = o.__page;
+            __capacity = o.__capacity;
+            __data = core::memory::allocate<T>(__capacity);
+            _construct(__data, o.__data, o.__size);
+        }
+
+        template <typename T>
+        list<T>::list(list<T> && o) noexcept
+        {
+            __max = o.__max;
+            __size = o.__size;
+            __page = o.__page;
+            __capacity = o.__capacity;
+            __data = o.__data;
+
+            o.__max = container::max;
+            o.__size = 0;
+            o.__page = container::page;
+            o.__capacity = 0;
+            o.__data = nullptr;
+        }
+
+        template <typename T>
+        list<T>::~list()
+        {
+            _destruct(__data, __size);
+            __data = core::memory::deallocate<T>(__data);
+            __size = 0;
+            __capacity = 0;
+            __page = 0;
+            __max = 0;
+        }
+
+        template <typename T>
+        list<T> & list<T>::operator=(const list<T> & o)
+        {
+            if(&o != this)
+            {
+                _destruct(__data, __size);
+                __page = o.__page;
+                __capacity = o.__capacity;
+                __size = o.__size;
+                __max = o.__max;
+                __data = core::memory::allocate<T>(__data, __capacity);
+                _construct(__data, o.__data, o.__size);
+            }
+            return *this;
+        }
+
+        template <typename T>
+        list<T> & list<T>::operator=(list<T> && o) noexcept
+        {
+            if(&o != this)
+            {
+                _destruct(__data, __size);
+                __data = core::memory::deallocate(__data);
+                __page = o.__page;
+                __capacity = o.__capacity;
+                __size = o.__size;
+                __max = o.__max;
+                __data = o.__data;
+
+                o.__page = 0;
+                o.__capacity = 0;
+                o.__size = 0;
+                o.__max = 0;
+                o.__data = nullptr;
+            }
+            return *this;
+        }
+
+        template <typename T>
+        T & list<T>::operator[](uint64 i)
+        {
+            if(__size <= i)
+            {
+                throw exception();
+            }
+            return __data[i];
+        }
+
+        template <typename T>
+        const T & list<T>::operator[](uint64 i) const
+        {
+            if(__size <= i)
+            {
+                throw exception();
+            }
+            return __data[i];
+        }
+
+        template <typename T>
+        uint64 list<T>::previous(uint64 i)
+        {
+            if(i == 0)
+            {
+                return __size;
+            }
+            else
+            {
+                if(i > __size)
+                {
+                    throw exception();
+                }
+                return i - 1;
+            }
+        }
+
+        template <typename T>
+        uint64 list<T>::next(uint64 i)
+        {
+            if(i == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                if(i > __size)
+                {
+                    throw exception();
+                }
+                if(i == __size)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return i + 1;
+                }
+            }
+        }
+
+        template <typename T>
+        T & list<T>::reference(uint64 i)
+        {
+            if(0 < i && i <= __size)
+            {
+                return __data[i - 1];
+            }
+            throw exception();
+        }
+
+        template <typename T>
+        T * list<T>::pointer(uint64 i)
+        {
+            if(0 < i && i <= __size)
+            {
+                return &__data[i - 1];
+            }
+            return nullptr;
+        }
+
+        template <typename T>
+        void list<T>::each(function<void (const T &)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                for(uint64 i = 0; i < __size; i++)
+                {
+                    f(__data[i]);
+                }
+                container::unlock();
+            }
+        }
+
+        template <typename T>
+        bool list<T>::del(const T & o)
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    _destruct(&__data[i]);
+                    core::memory::move(&__data[i], &__data[i + 1], __size - i - 1);
+                    __size -= 1;
+                    container::unlock();
+                    return true;
+                }
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        bool list<T>::del(T && o)
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    _destruct(&__data[i]);
+                    core::memory::move(&__data[i], &__data[i + 1], __size - i - 1);
+                    __size -= 1;
+                    container::unlock();
+                    return true;
+                }
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        void list<T>::del(const T & o, function<void (bool)> f)
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    _destruct(&__data[i]);
+                    core::memory::move(&__data[i], &__data[i + 1], __size - i - 1);
+                    __size -= 1;
+                    container::unlock();
+                    if(f != nullptr)
+                    {
+                        f(true);
+                    }
+                    return;
+                }
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::del(T && o, function<void (bool)> f)
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    _destruct(&__data[i]);
+                    core::memory::move(&__data[i], &__data[i + 1], __size - i - 1);
+                    __size -= 1;
+                    container::unlock();
+                    if(f != nullptr)
+                    {
+                        f(true);
+                    }
+                    return;
+                }
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::del(const T & o, function<void (T &)> f, function<void (const exception &)> e)
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    if(f != nullptr)
+                    {
+                        f(__data[i]);
+                    }
+                    _destruct(&__data[i]);
+                    core::memory::move(&__data[i], &__data[i + 1], __size - i - 1);
+                    __size -= 1;
+                    container::unlock();
+                    return;
+                }
+            }
+            container::unlock();
+            if(e != nullptr)
+            {
+                e(exception());
+            }
+        }
+
+        template <typename T>
+        void list<T>::del(T && o, function<void (T &)> f, function<void (const exception &)> e)
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    if(f != nullptr)
+                    {
+                        f(__data[i]);
+                    }
+                    _destruct(&__data[i]);
+                    core::memory::move(&__data[i], &__data[i + 1], __size - i - 1);
+                    __size -= 1;
+                    container::unlock();
+                    return;
+                }
+            }
+            container::unlock();
+            if(e != nullptr)
+            {
+                e(exception());
+            }
+        }
+
+        template <typename T>
+        bool list<T>::add(const T & o)
+        {
+            container::lock();
+            if(__size < __max)
+            {
+                __capacity = capacity::get(__size + 1, container::page);
+                __data = core::memory::allocate<T>(__data, __capacity);
+                _construct(&__data[__size], o);
+                __size += 1;
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        bool list<T>::add(T && o)
+        {
+            container::lock();
+            if(__size < __max)
+            {
+                __capacity = capacity::get(__size + 1, container::page);
+                __data = core::memory::allocate<T>(__data, __capacity);
+                _construct(&__data[__size], move(o));
+                __size += 1;
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        void list<T>::add(const T & o, function<void (bool)> f)
+        {
+            container::lock();
+            if(__size < __max)
+            {
+                __capacity = capacity::get(__size + 1, container::page);
+                __data = core::memory::allocate<T>(__data, __capacity);
+                _construct(&__data[__size], o);
+                __size += 1;
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::add(T && o, function<void (bool)> f)
+        {
+            container::lock();
+            if(__size < __max)
+            {
+                __capacity = capacity::get(__size + 1, container::page);
+                __data = core::memory::allocate<T>(__data, __capacity);
+                _construct(&__data[__size], move(o));
+                __size += 1;
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        bool list<T>::exist(const T & o) const
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    container::unlock();
+                    return true;
+                }
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        void list<T>::exist(const T & o, function<void (bool)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                for(uint64 i = 0; i < __size; i++)
+                {
+                    if(__data[i] == o)
+                    {
+                        f(true);
+                        container::unlock();
+                        return;
+                    }
+                }
+                container::unlock();
+                f(false);
+            }
+        }
+
+        template <typename T>
+        bool list<T>::exist(T && o) const
+        {
+            container::lock();
+            for(uint64 i = 0; i < __size; i++)
+            {
+                if(__data[i] == o)
+                {
+                    container::unlock();
+                    return true;
+                }
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        void list<T>::exist(T && o, function<void (bool)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                for(uint64 i = 0; i < __size; i++)
+                {
+                    if(__data[i] == o)
+                    {
+                        f(true);
+                        container::unlock();
+                        return;
+                    }
+                }
+                container::unlock();
+                f(false);
+            }
+        }
+
+        template <typename T>
+        uint64 list<T>::size() const
+        {
+            return __size;
+        }
+
+        template <typename T>
+        void list<T>::size(function<void (int64)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                f(__size);
+                container::unlock();
+            }
+        }
+
+        template <typename T>
+        bool list<T>::empty() const
+        {
+            return __size == 0;
+        }
+
+        template <typename T>
+        void list<T>::empty(function<void (bool)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                f(__size == 0);
+                container::unlock();
+            }
+        }
+
+        template <typename T>
+        void list<T>::clear()
+        {
+            container::lock();
+            _destruct(__data, __size);
+            __size = 0;
+            __capacity = capacity::get(__size, container::page);
+            __data = core::memory::allocate<T>(__data, __capacity);
+            container::unlock();
+        }
+
+        template <typename T>
+        void list<T>::clear(function<void (T &)> f)
+        {
+            container::lock();
+            if(f != nullptr)
+            {
+                for(uint64 i = 0; i < __size; i++)
+                {
+                    f(__data[i]);
+                }
+            }
+            _destruct(__data, __size);
+            __size = 0;
+            __capacity = capacity::get(__size, container::page);
+            __data = core::memory::allocate<T>(__data, __capacity);
+            container::unlock();
+        }
+
+        template <typename T>
+        const T & list<T>::get(uint64 i) const
+        {
+            if(__size <= i)
+            {
+                throw exception();
+            }
+            return __data[i];
+        }
+
+        template <typename T>
+        T & list<T>::get(uint64 i)
+        {
+            if(__size <= i)
+            {
+                throw exception();
+            }
+            return __data[i];
+        }
+
+        template <typename T>
+        void list<T>::get(uint64 i, function<void (const T &)> f, function<void (const exception &)> e) const
+        {
+            container::lock();
+            if(i < __size)
+            {
+                if(f != nullptr)
+                {
+                    f(__data[i]);
+                }
+                container::unlock();
+            }
+            else
+            {
+                container::unlock();
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+        }
+
+        template <typename T>
+        void list<T>::get(uint64 i, function<void (T &)> f, function<void (const exception &)> e)
+        {
+            container::lock();
+            if(i < __size)
+            {
+                if(f != nullptr)
+                {
+                    f(__data[i]);
+                }
+                container::unlock();
+            }
+            else
+            {
+                container::unlock();
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+        }
+
+        template <typename T>
+        iterator<T> list<T>::begin()
+        {
+            return iterator<T>::accessor::create(this, __size == 0 ? 0 : 1);
+        }
+
+        template <typename T>
+        iterator<T> list<T>::end()
+        {
+            return iterator<T>::accessor::create(this, 0);
+        }
+
+        template <typename T>
+        const iterator<T> list<T>::begin() const
+        {
+            return iterator<T>::accessor::create(this, __size == 0 ? 0 : 1);
+        }
+
+        template <typename T>
+        const iterator<T> list<T>::end() const
+        {
+            return iterator<T>::accessor::create(this, 0);
+        }
+
+        template <typename T>
+        bool list<T>::set(uint64 i, const T & o)
+        {
+            container::lock();
+            if(i < __max)
+            {
+                if(__capacity <= i)
+                {
+                    __capacity = capacity::get(i + 1, container::page);
+                    __data = core::memory::allocate<T>(__data, __capacity);
+                }
+                if(__size <= i)
+                {
+                    if(__size < i)
+                    {
+                        _construct(&__data[__size], i - __size, T());
+                    }
+                    __size = (i + 1);
+                }
+                _construct(&__data[i], o);
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        bool list<T>::set(uint64 i, T && o)
+        {
+            container::lock();
+            if(i < __max)
+            {
+                if(__capacity <= i)
+                {
+                    __capacity = capacity::get(i + 1, container::page);
+                    __data = core::memory::allocate<T>(__data, __capacity);
+                }
+                if(__size <= i)
+                {
+                    if(__size < i)
+                    {
+                        _construct(&__data[__size], i - __size, T());
+                    }
+                    __size = (i + 1);
+                }
+                _construct(&__data[i], move(o));
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        void list<T>::set(uint64 i, const T & o, function<void (bool)> f)
+        {
+            container::lock();
+            if(i < __max)
+            {
+                if(__capacity <= i)
+                {
+                    __capacity = capacity::get(i + 1, container::page);
+                    __data = core::memory::allocate<T>(__data, __capacity);
+                }
+                if(__size <= i)
+                {
+                    if(__size < i)
+                    {
+                        _construct(&__data[__size], i - __size, T());
+                    }
+                    __size = (i + 1);
+                }
+                _construct(&__data[i], o);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::set(uint64 i, T && o, function<void (bool)> f)
+        {
+            container::lock();
+            if(i < __max)
+            {
+                if(__capacity <= i)
+                {
+                    __capacity = capacity::get(i + 1, container::page);
+                    __data = core::memory::allocate<T>(__data, __capacity);
+                }
+                if(__size <= i)
+                {
+                    if(__size < i)
+                    {
+                        _construct(&__data[__size], i - __size, T());
+                    }
+                    __size = (i + 1);
+                }
+                _construct(&__data[i], move(o));
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::set(uint64 i, const T & o, function<void (const T &)> f, function<void (const exception &)> e)
+        {
+            container::lock();
+            if(i < __max)
+            {
+                if(__capacity <= i)
+                {
+                    __capacity = capacity::get(i + 1, container::page);
+                    __data = core::memory::allocate<T>(__data, __capacity);
+                }
+                if(__size <= i)
+                {
+                    if(__size < i)
+                    {
+                        _construct(&__data[__size], i - __size, T());
+                    }
+                    __size = (i + 1);
+                }
+                _construct(&__data[i], o);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(o);
+                }
+                return;
+            }
+            container::unlock();
+            if(e != nullptr)
+            {
+                e(exception());
+            }
+        }
+
+        template <typename T>
+        void list<T>::set(uint64 i, T && o, function<void (const T &)> f, function<void (const exception &)> e)
+        {
+            container::lock();
+            if(i < __max)
+            {
+                if(__capacity <= i)
+                {
+                    __capacity = capacity::get(i + 1, container::page);
+                    __data = core::memory::allocate<T>(__data, __capacity);
+                }
+                if(__size <= i)
+                {
+                    if(__size < i)
+                    {
+                        _construct(&__data[__size], i - __size, T());
+                    }
+                    __size = (i + 1);
+                }
+                _construct(&__data[i], move(o));
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(o);
+                }
+                return;
+            }
+            container::unlock();
+            if(e != nullptr)
+            {
+                e(exception());
+            }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__ARRAY_LIST__HP__

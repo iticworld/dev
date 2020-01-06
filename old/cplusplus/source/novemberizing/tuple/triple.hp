@@ -1,0 +1,64 @@
+/**
+ *
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__TRIPLE__HP__
+#define   __NOVEMBERIZING__TRIPLE__HP__
+
+#include <novemberizing/tuple/triple.hh>
+
+namespace novemberizing
+{
+    namespace tuple
+    {
+        template <typename A, typename B, typename C>
+        triple<A, B, C>::triple() : pair<A, B>(), third()
+        {
+        }
+
+        template <typename A, typename B, typename C>
+        triple<A, B, C>::triple(const triple<A, B, C> & o) : pair(o), third(o.third)
+        {
+        }
+
+        template <typename A, typename B, typename C>
+        triple<A, B, C>::triple(triple<A, B, C> && o) noexcept : pair(move(o)), third(move(o.third))
+        {
+        }
+
+        template <typename A, typename B, typename C>
+        triple<A, B, C>::~triple()
+        {
+        }
+
+        template <typename A, typename B, typename C>
+        triple<A, B, C> & triple<A, B, C>::operator=(const triple<A, B, C> & o)
+        {
+            if(&o != this)
+            {
+                this->first = o.first;
+                this->second = o.second;
+                this->third = o.third;
+            }
+            return *this;
+        }
+
+        template <typename A, typename B, typename C>
+        triple<A, B, C> & triple<A, B, C>::operator=(triple<A, B, C> && o) noexcept
+        {
+            if(&o != this)
+            {
+                this->first = move(o.first);
+                this->second = move(o.second);
+                this->third = move(o.third);
+            }
+            return *this;
+        };
+    }
+}
+
+#endif // __NOVEMBERIZING__TRIPLE__HP__

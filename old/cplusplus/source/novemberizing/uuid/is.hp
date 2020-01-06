@@ -1,0 +1,24 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 5
+ */
+
+#ifndef   __NOVEMBERIZING__UUID_IS__HP__
+#define   __NOVEMBERIZING__UUID_IS__HP__
+
+#include <novemberizing/uuid.hh>
+
+namespace novemberizing
+{
+    inline uuid::is::~is(){}
+    inline uuid::is::is(){}
+    inline uuid::is::is(const is & o){}
+    inline uuid::is::is(is && o) noexcept {}
+
+    inline uuid::is & uuid::is::operator=(const is & o){ return *this; }
+    inline uuid::is & uuid::is::operator=(is && o) noexcept { return *this; }
+}
+
+#endif // __NOVEMBERIZING__UUID_IS__HP__

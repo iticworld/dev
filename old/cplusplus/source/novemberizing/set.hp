@@ -1,0 +1,48 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__SET__HP__
+#define   __NOVEMBERIZING__SET__HP__
+
+#include <novemberizing/set.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    set<T>::set()
+    {
+    }
+
+    template <typename T>
+    set<T>::set(const set<T> & o)
+    {
+    }
+
+    template <typename T>
+    set<T>::set(set<T> && o) noexcept
+    {
+    }
+
+    template <typename T>
+    set<T>::~set()
+    {
+    }
+
+    template <typename T>
+    set<T> & set<T>::operator=(const set<T> & o)
+    {
+        return *this;
+    }
+
+    template <typename T>
+    set<T> & set<T>::operator=(set<T> && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__SET__HP__

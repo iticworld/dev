@@ -1,0 +1,48 @@
+/**
+ *
+ * @author      novemberizing <developer@novemberizing.net>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__TREE__HP__
+#define   __NOVEMBERIZING__TREE__HP__
+
+#include <novemberizing/tree.hh>
+
+namespace novemberizing
+{
+    template <typename T, typename TUPLE>
+    tree<T, TUPLE>::tree()
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    tree<T, TUPLE>::tree(const tree<T, TUPLE> & o)
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    tree<T, TUPLE>::tree(tree<T, TUPLE> && o) noexcept
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    tree<T, TUPLE>::~tree()
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    tree<T, TUPLE> & tree<T, TUPLE>::operator=(const tree<T, TUPLE> & o)
+    {
+        return *this;
+    }
+
+    template <typename T, typename TUPLE>
+    tree<T, TUPLE> & tree<T, TUPLE>::operator=(tree<T, TUPLE> && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__TREE__HP__

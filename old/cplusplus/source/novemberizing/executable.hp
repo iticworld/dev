@@ -1,0 +1,46 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__EXECUTABLE__HP__
+#define   __NOVEMBERIZING__EXECUTABLE__HP__
+
+#include <novemberizing/executable.hh>
+
+namespace novemberizing
+{
+    executable::~executable()
+    {
+
+    }
+
+    executable::executable()
+    {
+
+    }
+
+    executable::executable(const executable & o)
+    {
+
+    }
+
+    executable::executable(executable && o) noexcept
+    {
+
+    }
+
+    executable & executable::operator=(const executable & o)
+    {
+        return *this;
+    }
+
+    executable & executable::operator=(executable && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__EXECUTABLE__HP__

@@ -1,0 +1,975 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__BYTES__HP__
+#define   __NOVEMBERIZING__BYTES__HP__
+
+#include <novemberizing/bytes.hh>
+#include <novemberizing/exception.hh>
+
+namespace novemberizing
+{
+    const inline uint64 bytes::page = 4096;
+
+    inline bytes bytes::sub(const bytes & o){ return bytes(o); }
+    inline bytes bytes::sub(const bytes & o, uint64 offset){ return bytes(o, offset); }
+    inline bytes bytes::sub(const bytes & o, uint64 offset, uint64 n){ return bytes(o, offset, n); }
+
+    inline bytes::bytes() : __capacity(0), __size(0), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+    }
+
+    inline bytes::bytes(int16 n) : __capacity(0), __size(2), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, (byte *) &n, sizeof(int16));
+    }
+
+    inline bytes::bytes(int32 n) : __capacity(0), __size(4), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, (byte *) &n, sizeof(int32));
+    }
+
+    inline bytes::bytes(int64 n) : __capacity(0), __size(8), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, (byte *) &n, sizeof(int64));
+    }
+
+    inline bytes::bytes(uint16 n) : __capacity(0), __size(2), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, (byte *) &n, sizeof(uint16));
+    }
+
+    inline bytes::bytes(uint32 n) : __capacity(0), __size(4), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, (byte *) &n, sizeof(uint32));
+    }
+
+    inline bytes::bytes(uint64 n) : __capacity(0), __size(8), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, (byte *) &n, sizeof(uint64));
+    }
+
+    inline bytes::bytes(const bytes & o) : __capacity(o.__capacity), __size(o.__size), __data(nullptr)
+    {
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, o.__data, __size);
+    }
+
+    inline bytes::bytes(const bytes & o, uint64 pos) : __capacity(0), __size(0), __data(nullptr)
+    {
+        if(o.__size < pos)
+        {
+            /** exception handling */
+            __size = 0;
+        }
+        else
+        {
+            __size = o.__size - pos;
+        }
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, &o.__data[pos], __size);
+    }
+
+    inline bytes::bytes(const bytes & o, uint64 pos, uint64 len) : __capacity(0), __size(0), __data(nullptr)
+    {
+        if(o.__size < pos)
+        {
+            /** exception handling */
+            __size = 0;
+        }
+        else
+        {
+
+            __size = (o.__size - pos < len ? o.__size - pos : len);
+        }
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::copy<byte>(__data, &o.__data[pos], __size);
+    }
+
+    inline bytes::bytes(bytes && o) noexcept : __capacity(o.__capacity), __size(o.__size), __data(o.__data)
+    {
+        o.__capacity = 0;
+        o.__size = 0;
+        o.__data = nullptr;
+    }
+
+    inline bytes::bytes(const byte * s, uint64 len) : __capacity(0), __size(0), __data(nullptr)
+    {
+        if(s != nullptr && len > 0)
+        {
+            __size = len;
+            __capacity = capacity::get(__size, bytes::page);
+            __data = memory::allocate<byte>(__capacity);
+            memory::copy<byte>(__data, s, __size);
+        }
+        else
+        {
+            __capacity = capacity::get(__size, bytes::page);
+            __data = memory::allocate<byte>(__capacity);
+        }
+    }
+
+    inline bytes::bytes(byte c) : __capacity(0), __size(0), __data(nullptr)
+    {
+        __size = 1;
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        __data[0] = c;
+    }
+
+    inline bytes::bytes(byte c, uint64 len) : __capacity(0), __size(0), __data(nullptr)
+    {
+        __size = len;
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__capacity);
+        memory::fill<byte>(__data, c, __size);
+    }
+
+    inline bytes::~bytes()
+    {
+        __size = 0;
+        __capacity = 0;
+        __data = memory::deallocate<byte>(__data);
+    }
+
+    inline bytes & bytes::operator=(const bytes & o){ return assign(o); }
+    inline bytes & bytes::operator=(bytes && o) noexcept { return assign(move(o)); }
+    inline bytes & bytes::operator=(byte c) { return assign(c); }
+
+    inline bytes & bytes::operator+=(const bytes & o){ return append(o); }
+    inline bytes & bytes::operator+=(bytes && o){ return append(move(o)); }
+    inline bytes & bytes::operator+=(byte c){ return append(c); }
+
+    inline byte & bytes::operator[](uint64 i) { return at(i); }
+    inline const byte & bytes::operator[](uint64 i) const { return at(i); }
+
+    inline byte & bytes::at(uint64 i)
+    {
+        if(__size <= i)
+        {
+            throw exception();
+        }
+        return __data[i];
+    }
+
+    inline const byte & bytes::at(uint64 i) const
+    {
+        if(__size <= i)
+        {
+            throw exception();
+        }
+        return __data[i];
+    }
+
+    inline uint64 bytes::capacity() const { return __capacity; }
+    inline uint64 bytes::size() const { return __size; }
+    inline const byte * bytes::v() const { return __data; }
+
+    inline const byte * bytes::v(uint64 i) const
+    {
+        if(__size < i)
+        {
+            throw exception();
+        }
+        return i == __size ? nullptr : &__data[i];
+    }
+
+    inline bytes & bytes::assign(const bytes & o)
+    {
+        if(&o != this)
+        {
+            __size = o.__size;
+            __capacity = o.__capacity;
+            __data = memory::allocate<byte>(__data, __size);
+            memory::copy<byte>(__data, o.__data, __size);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::assign(const bytes & o, uint64 pos)
+    {
+        if(&o != this)
+        {
+            if(o.__size < pos)
+            {
+                throw exception();
+            }
+            __size = o.__size - pos;
+            __capacity = capacity::get(__size, bytes::page);
+            __data = memory::allocate<byte>(__data, __size);
+            memory::copy<byte>(__data, &o.__data[pos], __size);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::assign(const bytes & o, uint64 pos, uint64 len)
+    {
+        if(&o != this)
+        {
+            if(o.__size < pos)
+            {
+                throw exception();
+            }
+            __size = (o.__size - pos < len ? o.__size - pos : len);
+            __capacity = capacity::get(__size, bytes::page);
+            __data = memory::allocate<byte>(__data, __size);
+            memory::copy<byte>(__data, &o.__data[pos], __size);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::assign(bytes && o) noexcept
+    {
+        if(&o != this)
+        {
+            __capacity = o.__capacity;
+            __size = o.__size;
+            __data = o.__data;
+
+            o.__capacity = 0;
+            o.__size = 0;
+            o.__data = nullptr;
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::assign(const byte * s, uint64 len)
+    {
+        __size = len;
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::copy<byte>(__data, s, len);
+        return *this;
+    }
+
+    inline bytes & bytes::assign(byte c)
+    {
+        __size = 1;
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        __data[0] = c;
+        return *this;
+    }
+
+    inline bytes & bytes::assign(byte c, uint64 len)
+    {
+        __size = len;
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::fill<byte>(__data, c, __size);
+        return *this;
+    }
+
+//    inline bytes & bytes::assign(const string & o)
+//    {
+//        __size = o.size();
+//        __capacity = capacity::get(__size, bytes::page);
+//        __data = memory::allocate<byte>(__data, __capacity);
+//        memory::copy<byte>(__data, (byte *) o.v(), __size);
+//        return *this;
+//    }
+
+    inline bytes & bytes::append(const bytes & o)
+    {
+        if(&o == this)
+        {
+            throw exception();
+        }
+        __capacity = capacity::get(__size + o.__size, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::copy<byte>(&__data[__size], o.__data, o.__size);
+        __size += o.__size;
+        return *this;
+    }
+
+    inline bytes & bytes::append(const bytes & o, uint64 pos)
+    {
+        if(&o == this)
+        {
+            throw exception();
+        }
+        if(o.__size < pos)
+        {
+            throw exception();
+        }
+        __capacity = capacity::get(__size + o.__size - pos, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::copy<byte>(&__data[__size], &o.__data[pos], o.__size - pos);
+        __size += (o.__size - pos);
+        return *this;
+    }
+
+    inline bytes & bytes::append(const bytes & o, uint64 pos, uint64 len)
+    {
+        if(&o == this)
+        {
+            throw exception();
+        }
+        if(o.__size < pos)
+        {
+            throw exception();
+        }
+        len = o.__size - pos < len ? o.__size - pos : len;
+        __capacity = capacity::get(__size + len, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::copy<byte>(&__data[__size], &o.__data[pos], len);
+        __size += len;
+        return *this;
+    }
+
+    inline bytes & bytes::append(bytes && o)
+    {
+        if(&o == this)
+        {
+            throw exception();
+        }
+        __capacity = capacity::get(__size + o.__size, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::copy<byte>(&__data[__size], o.__data, o.__size);
+        __size += o.__size;
+        return *this;
+    }
+
+    inline bytes & bytes::append(const byte * s, uint64 len)
+    {
+        if(s == nullptr && len > 0)
+        {
+            throw exception();
+        }
+        __capacity = capacity::get(__size + len, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::copy<byte>(&__data[__size], s, len);
+        __size += len;
+        return *this;
+    }
+
+    inline bytes & bytes::append(byte c)
+    {
+        __capacity = capacity::get(__size + 1, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        __data[__size] = c;
+        __size += 1;
+        return *this;
+    }
+
+    inline bytes & bytes::append(byte c, uint64 len)
+    {
+        __capacity = capacity::get(__size + len, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        memory::fill<byte>(&__data[__size], c, len);
+        __size += len;
+        return *this;
+    }
+//
+//    inline bytes & bytes::append(const string & o)
+//    {
+//        __capacity = capacity::get(__size + o.size(), bytes::page);
+//        __data = memory::allocate<byte>(__data, __capacity);
+//        memory::copy<byte>(&__data[__size], (byte *) o.v(), o.size());
+//        __size += o.size();
+//        return *this;
+//    }
+
+    inline bytes & bytes::insert(uint64 offset, const bytes & o)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        if(&o == this)
+        {
+            throw exception();
+        }
+        if(offset < __size)
+        {
+            __capacity = capacity::get(__size + o.__size, bytes::page);
+            __data = memory::allocate<byte>(__data, __capacity);
+            memory::move<byte>(&__data[offset + o.__size] , &__data[offset], __size - offset);
+            memory::copy<byte>(&__data[offset], o.__data, o.__size);
+            __size += o.__size;
+        }
+        else
+        {
+            return append(o);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::insert(uint64 offset, const bytes & o, uint64 pos)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        else
+        {
+            if(offset < __size)
+            {
+                if(&o == this)
+                {
+                    throw exception();
+                }
+                if(o.__size < pos)
+                {
+                    throw exception();
+                }
+                __capacity = capacity::get(__size + o.__size - pos, bytes::page);
+                __data = memory::allocate<byte>(__data, __capacity);
+                memory::move<byte>(&__data[offset + o.__size - pos] , &__data[offset], __size - offset);
+                memory::copy<byte>(&__data[offset], o.__data, o.__size - pos);
+                __size += (o.__size  - pos);
+            }
+            else
+            {
+                return append(o, pos);
+            }
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::insert(uint64 offset, const bytes & o, uint64 pos, uint64 len)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        else
+        {
+            if(offset < __size)
+            {
+                if(&o == this)
+                {
+                    throw exception();
+                }
+                if(o.__size < pos)
+                {
+                    throw exception();
+                }
+                len = (o.__size - pos < len ? o.__size - pos : len);
+                __capacity = capacity::get(__size + len, bytes::page);
+                __data = memory::allocate<byte>(__data, __capacity);
+                memory::move<byte>(&__data[offset + len] , &__data[offset], __size - offset);
+                memory::copy<byte>(&__data[offset], o.__data, len);
+                __size += len;
+            }
+            else
+            {
+                return append(o, pos, len);
+            }
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::insert(uint64 offset, bytes && o)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        if(&o == this)
+        {
+            throw exception();
+        }
+        if(offset < __size)
+        {
+            __capacity = capacity::get(__size + o.__size, bytes::page);
+            __data = memory::allocate<byte>(__data, __capacity);
+            memory::move<byte>(&__data[offset + o.__size] , &__data[offset], __size - offset);
+            memory::copy<byte>(&__data[offset], o.__data, o.__size);
+            __size += o.__size;
+        }
+        else
+        {
+            return append(o);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::insert(uint64 offset, const byte * s, uint64 len)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        if(offset < __size)
+        {
+            if(s == nullptr && len > 0)
+            {
+                throw exception();
+            }
+            __capacity = capacity::get(__size + len, bytes::page);
+            __data = memory::allocate<byte>(__data, __capacity);
+            memory::move<byte>(&__data[offset + len] , &__data[offset], __size - offset);
+            memory::copy<byte>(&__data[offset], s, len);
+            __size += len;
+        }
+        else
+        {
+            return append(s, len);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::insert(uint64 offset, byte c)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        if(offset < __size)
+        {
+            __capacity = capacity::get(__size + 1, bytes::page);
+            __data = memory::allocate<byte>(__data, __capacity);
+            memory::move<byte>(&__data[offset + 1] , &__data[offset], __size - offset);
+            __data[offset] = 1;
+            __size += 1;
+        }
+        else
+        {
+            return append(c);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::insert(uint64 offset, byte c, uint64 len)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        if(offset < __size)
+        {
+            __capacity = capacity::get(__size + len, bytes::page);
+            __data = memory::allocate<byte>(__data, __capacity);
+            memory::move<byte>(&__data[offset + len], &__data[offset], __size - offset);
+            memory::fill<byte>(&__data[offset], c, len);
+            __size += len;
+        }
+        else
+        {
+            return append(c, len);
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::erase()
+    {
+        __size = 0;
+        return *this;
+    }
+
+    inline bytes & bytes::erase(uint64 offset)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        __size = offset;
+        return *this;
+    }
+
+    inline bytes & bytes::erase(uint64 offset, uint64 n)
+    {
+        if(__size < offset)
+        {
+            throw exception();
+        }
+        n = __size - offset < n ? __size - offset : n;
+        if(offset + n < __size)
+        {
+            memory::move<byte>(&__data[offset], &__data[offset + n], __size - offset - n);
+            __size -= n;
+        }
+        else
+        {
+            __size = offset;
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::clear()
+    {
+        __size = 0;
+        __capacity = capacity::get(__size, bytes::page);
+        __data = memory::allocate<byte>(__data, __capacity);
+        return *this;
+    }
+
+    inline bytes & bytes::replace(uint64 offset, uint64 n, const bytes & o)
+    {
+        if(offset < __size)
+        {
+            if(o.__size > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < o.__size)
+                    {
+                        __capacity = capacity::get(__size + (o.__size - n), bytes::page);
+                        __data = memory::allocate<byte>(__data, __capacity);
+                        memory::move<byte>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], o.__data, o.__size);
+                        __size += (o.__size - n);
+                    }
+                    else if(n ==  o.__size)
+                    {
+                        memory::copy<byte>(&__data[offset], o.__data, o.__size);
+                    }
+                    else
+                    {
+                        memory::move<byte>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], o.__data, o.__size);
+                        __size -= (n - o.__size);
+                    }
+                }
+                else
+                {
+                    insert(offset, o);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::replace(uint64 offset, uint64 n, const bytes & o, uint64 pos)
+    {
+        if(offset < __size)
+        {
+            uint64 len = 0;
+            if(o.__size < pos)
+            {
+                throw exception();
+            }
+            else
+            {
+                len = o.__size - pos;
+            }
+
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), bytes::page);
+                        __data = memory::allocate<byte>(__data, __capacity);
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], &o.__data[pos], len);
+                        __size += (len - n);
+                    }
+                    else if(n == len)
+                    {
+                        memory::copy<byte>(&__data[offset], &o.__data[pos], len);
+                    }
+                    else
+                    {
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], &o.__data[pos], len);
+                        __size -= (n - len);
+                    }
+                }
+                else
+                {
+                    insert(offset, o, pos);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o, pos);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::replace(uint64 offset, uint64 n, const bytes & o, uint64 pos, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(o.__size < pos)
+            {
+                len = 0;
+                throw exception();
+            }
+            else
+            {
+                len = (o.__size - pos < len ? o.__size - pos : len);
+            }
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), bytes::page);
+                        __data = memory::allocate<byte>(__data, __capacity);
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], &o.__data[pos], len);
+                        __size += (len - n);
+                    }
+                    else if(n == len)
+                    {
+                        memory::copy<byte>(&__data[offset], &o.__data[pos], len);
+                    }
+                    else
+                    {
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], &o.__data[pos], len);
+                        __size -= (n - len);
+                    }
+                }
+                else
+                {
+                    insert(offset, o, pos, len);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o, pos, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::replace(uint64 offset, uint64 n, bytes && o)
+    {
+        if(offset < __size)
+        {
+            if(o.__size > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < o.__size)
+                    {
+                        __capacity = capacity::get(__size + (o.__size - n), bytes::page);
+                        __data = memory::allocate<byte>(__data, __capacity);
+                        memory::move<byte>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], o.__data, o.__size);
+                        __size += (o.__size - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n ==  o.__size)
+                    {
+                        memory::copy<byte>(&__data[offset], o.__data, o.__size);
+                    }
+                    else
+                    {
+                        memory::move<byte>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], o.__data, o.__size);
+                        __size -= (n - o.__size);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, move(o));
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::replace(uint64 offset, uint64 n, const byte * s, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(s == nullptr && len > 0)
+            {
+                len = 0;
+                throw exception();
+            }
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), bytes::page);
+                        __data = memory::allocate<byte>(__data, __capacity);
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], s, len);
+                        __size += (len - n);
+                    }
+                    else if(n == len)
+                    {
+                        memory::copy<byte>(&__data[offset], s, len);
+                    }
+                    else
+                    {
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::copy<byte>(&__data[offset], s, len);
+                        __size -= (n - len);
+                    }
+                }
+                else
+                {
+                    insert(offset, s, len);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(s, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::replace(uint64 offset, uint64 n, byte c)
+    {
+        if(offset < __size)
+        {
+            n = __size - offset < n ? __size - offset : n;
+            if(n > 0)
+            {
+                if(n == 1)
+                {
+                    __data[offset] = c;
+                }
+                else
+                {
+                    memory::move<byte>(&__data[offset + 1], &__data[offset + n], __size - offset - n);
+                    __data[offset] = c;
+                    __size -= (n - 1);
+                    __data[__size] = 0;
+                }
+            }
+            else
+            {
+                insert(offset, c);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(c);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline bytes & bytes::replace(uint64 offset, uint64 n, byte c, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), bytes::page);
+                        __data = memory::allocate<byte>(__data, __capacity);
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::fill<byte>(&__data[offset], c, len);
+                        __size += (len - n);
+                    }
+                    else if(n == len)
+                    {
+                        memory::fill<byte>(&__data[offset], c, len);
+                    }
+                    else
+                    {
+                        memory::move<byte>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        memory::fill<byte>(&__data[offset], c, len);
+                        __size -= (n - len);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, c, len);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(c, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__BYTES__HP__

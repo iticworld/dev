@@ -1,0 +1,74 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 5.
+ */
+
+#ifndef   __NOVEMBERIZING__SYNCHRONIZER__HP__
+#define   __NOVEMBERIZING__SYNCHRONIZER__HP__
+
+#include <novemberizing/synchronizer.hh>
+
+namespace novemberizing
+{
+    inline synchronizer::synchronizer()
+    {
+    }
+
+    inline synchronizer::synchronizer(const synchronizer & o)
+    {
+    }
+
+    inline synchronizer::synchronizer(synchronizer && o) noexcept
+    {
+    }
+
+    inline synchronizer::~synchronizer()
+    {
+    }
+
+    inline synchronizer & synchronizer::operator=(const synchronizer & o)
+    {
+        return *this;
+    }
+
+    inline synchronizer & synchronizer::operator=(synchronizer && o) noexcept
+    {
+        return *this;
+    }
+
+    inline int32 synchronizer::lock() const
+    {
+        return success;
+    }
+
+    inline int32 synchronizer::unlock() const
+    {
+        return success;
+    }
+
+    inline int32 synchronizer::wait() const
+    {
+        return success;
+    }
+
+    inline int32 synchronizer::wait(int64 nanosecond) const
+    {
+        (void)(nanosecond);
+        return success;
+    }
+
+    inline int32 synchronizer::wakeup() const
+    {
+        return success;
+    }
+
+    inline int32 synchronizer::wakeup(bool all) const
+    {
+        (void)(all);
+        return success;
+    }
+}
+
+#endif // __NOVEMBERIZING__SYNCHRONIZER__HP__

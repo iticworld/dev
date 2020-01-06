@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'novemberizing.net'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'com.github.novemberizing:java:1cb4ba9895'
+    implementation group: 'javax.websocket', name: 'javax.websocket-api', version: '1.1'
+}

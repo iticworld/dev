@@ -1,0 +1,52 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__QUEUE__HP__
+#define   __NOVEMBERIZING__QUEUE__HP__
+
+#include <novemberizing/queue.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    queue<T>::~queue()
+    {
+
+    }
+
+    template <typename T>
+    queue<T>::queue()
+    {
+
+    }
+
+    template <typename T>
+    queue<T>::queue(const queue<T> & o)
+    {
+
+    }
+
+    template <typename T>
+    queue<T>::queue(queue<T> && o) noexcept
+    {
+
+    }
+
+    template <typename T>
+    queue<T> & queue<T>::operator=(const queue<T> & o) noexcept
+    {
+        return *this;
+    }
+
+    template <typename T>
+    queue<T> & queue<T>::operator=(queue<T> && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__QUEUE__HP__

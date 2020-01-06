@@ -1,0 +1,108 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 14.
+ */
+
+#ifndef   __NOVEMBERIZING__RED_BLACK_TREE_NODE__HP__
+#define   __NOVEMBERIZING__RED_BLACK_TREE_NODE__HP__
+
+#include <novemberizing/red/black/tree.hh>
+
+namespace novemberizing
+{
+    namespace red
+    {
+        namespace black
+        {
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node() : tuple(), __parent(nullptr), __left(nullptr), __right(nullptr), __color(black)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(const node & o) : tuple(o.tuple), __parent(o.__parent), __left(o.__left), __right(o.__right), __color(o.__color)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(node && o) noexcept : tuple(move(o.tuple)), __parent(o.__parent), __left(o.__left), __right(o.__right), __color(o.__color)
+            {
+                o.__parent = nullptr;
+                o.__left = nullptr;
+                o.__right = nullptr;
+                o.__color = black;
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::~node()
+            {
+                __parent = nullptr;
+                __left = nullptr;
+                __right = nullptr;
+                __color = black;
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(const TUPLE & v, node * parent, color c) : tuple(v), __parent(parent), __left(nullptr), __right(nullptr), __color(c)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(TUPLE && v, node * parent, color c) : tuple(move(v)), __parent(parent), __left(nullptr), __right(nullptr), __color(c)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node & tree<T, TUPLE>::node::operator=(const node & o)
+            {
+                if(&o != this)
+                {
+                    tuple = o.tuple;
+                    __parent = o.__parent;
+                    __left = o.__left;
+                    __right = o.__right;
+                    __color = o.__color;
+                }
+                return *this;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node & tree<T, TUPLE>::node::operator=(node && o) noexcept
+            {
+                if(&o != this)
+                {
+                    tuple = move(o.tuple);
+                    __parent = o.__parent;
+                    __left = o.__left;
+                    __right = o.__right;
+                    __color = o.__color;
+
+                    o.__parent = nullptr;
+                    o.__left = nullptr;
+                    o.__right = nullptr;
+                    o.__color = black;
+                }
+                return *this;
+            }
+
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::parent(){ return __parent; }
+            template <typename T, typename TUPLE> const typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::parent() const { return __parent; }
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::node::parent(node * n) { __parent = n; }
+
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::left(){ return __left; }
+            template <typename T, typename TUPLE> const typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::left() const { return __left; }
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::node::left(node * n) { __left = n; }
+
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::right(){ return __right; }
+            template <typename T, typename TUPLE> const typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::right() const { return __right; }
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::node::right(node * n) { __right = n; }
+
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::color tree<T, TUPLE>::node::c() const { return __color; }
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::node::c(color v){ __color = v; }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__RED_BLACK_TREE_NODE__HP__

@@ -1,0 +1,48 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__DICTIONARY__HP__
+#define   __NOVEMBERIZING__DICTIONARY__HP__
+
+#include <novemberizing/dictionary.hh>
+
+namespace novemberizing
+{
+    template <typename T, typename TUPLE>
+    dictionary<T, TUPLE>::dictionary()
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    dictionary<T, TUPLE>::dictionary(const dictionary<T, TUPLE> & o)
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    dictionary<T, TUPLE>::dictionary(dictionary<T, TUPLE> && o) noexcept
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    dictionary<T, TUPLE>::~dictionary()
+    {
+    }
+
+    template <typename T, typename TUPLE>
+    dictionary<T, TUPLE> & dictionary<T, TUPLE>::operator=(const dictionary<T, TUPLE> & o)
+    {
+        return *this;
+    }
+
+    template <typename T, typename TUPLE>
+    dictionary<T, TUPLE> & dictionary<T, TUPLE>::operator=(dictionary<T, TUPLE> && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__DICTIONARY__HP__

@@ -1,0 +1,26 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 7. 9.
+ */
+
+#ifndef   __NOVEMBERIZING__INTERNET_ADDRESS_TO__HP__
+#define   __NOVEMBERIZING__INTERNET_ADDRESS_TO__HP__
+
+#include <novemberizing/internet/address.hh>
+
+namespace novemberizing
+{
+    namespace internet
+    {
+        address::to::~to(){}
+        address::to::to(){}
+        address::to::to(const to & o){}
+        address::to::to(to && o) noexcept {}
+        address::to & address::to::operator=(const to & o){ return *this; }
+        address::to & address::to::operator=(to && o) noexcept { return *this; }
+    }
+}
+
+#endif // __NOVEMBERIZING__INTERNET_ADDRESS_TO__HP__

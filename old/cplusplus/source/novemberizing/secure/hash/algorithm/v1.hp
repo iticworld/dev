@@ -1,0 +1,40 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 7. 4.
+ */
+
+#ifndef   __NOVEMBERIZING__SECURE_HASH_ALGORITHM_V1__HP__
+#define   __NOVEMBERIZING__SECURE_HASH_ALGORITHM_V1__HP__
+
+#include <novemberizing/secure/hash/algorithm/v1.hh>
+
+namespace novemberizing
+{
+    namespace secure
+    {
+        namespace hash
+        {
+            namespace algorithm
+            {
+                inline v1::~v1(){}
+                inline v1::v1(){}
+                inline v1::v1(const v1 & o){}
+                inline v1::v1(v1 && o) noexcept {}
+
+                inline v1 & v1::operator=(const v1 & o)
+                {
+                    return *this;
+                }
+
+                inline v1 & v1::operator=(v1 && o) noexcept
+                {
+                    return *this;
+                }
+            }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__SECURE_HASH_ALGORITHM_V1__HP__

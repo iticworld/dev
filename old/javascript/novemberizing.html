@@ -1,0 +1,100 @@
+
+<!doctype html>
+<html>
+
+<head>
+    <title>Scatter Chart</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" type="text/javascript"></script>
+    <style>
+        canvas {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+    </style>
+    <script type="text/javascript">
+
+        var novemberizing = {
+            chart: {
+                init: function(){
+                    Chart.plugins.register({
+                        afterDatasetsDraw: function(chart) {
+                            var ctx = chart.ctx;
+
+                            chart.data.datasets.forEach(function(dataset, i) {
+                                var meta = chart.getDatasetMeta(i);
+                                if (!meta.hidden) {
+                                    meta.data.forEach(function(element, index) {
+                                        // Draw the text in black, with the specified font
+                                        ctx.fillStyle = 'rgb(0, 0, 0)';
+
+                                        var fontSize = 16;
+                                        var fontStyle = 'normal';
+                                        var fontFamily = 'Helvetica Neue';
+                                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                                        // Just naively convert to string for now
+                                        var dataString = dataset.data[novemberizing].v;
+
+                                        // Make sure alignment settings are correct
+                                        ctx.textAlign = 'center';
+                                        ctx.textBaseline = 'middle';
+
+                                        var padding = 5;
+                                        var position = element.tooltipPosition();
+                                        ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            },
+            tree: {
+                show: function(s, type, parent){
+                    if(type === 'binary search tree'){
+                        if(parent !== undefined){
+
+                        } else {
+                            var canvas = document.createElement('canvas');
+                            var context = canvas.getContext('2d');
+                            var data = {
+                                datasets: [{
+                                    label: 'NODE',
+                                    radius: 6,
+                                    borderColor: '#000000',
+                                    backgroundColor: '#000000',
+                                    data: JSON.parse(s)
+                                }]
+                            };
+                            new Chart(context, {
+                                type: 'scatter',
+                                data: data,
+                                options: {
+                                    tooltips: {
+                                        callbacks: {
+                                            label: function(tooltipItem, data) {
+                                                return data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].v;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                            document.body.appendChild(canvas);
+                        }
+                    } else {
+                        console.log("not support");
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+
+<body>
+<script>
+    novemberizing.chart.init();
+    novemberizing.tree.show("[{\"x\":33,\"y\":6,\"v\":28},{\"x\":17,\"y\":5,\"v\":18},{\"x\":49,\"y\":5,\"v\":83},{\"x\":9,\"y\":4,\"v\":8},{\"x\":41,\"y\":4,\"v\":74},{\"x\":57,\"y\":4,\"v\":98},{\"x\":5,\"y\":3,\"v\":1},{\"x\":37,\"y\":3,\"v\":41},{\"x\":45,\"y\":3,\"v\":75},{\"x\":53,\"y\":3,\"v\":94},{\"x\":35,\"y\":2,\"v\":40},{\"x\":39,\"y\":2,\"v\":72},{\"x\":51,\"y\":2,\"v\":87},{\"x\":38,\"y\":1,\"v\":43},{\"x\":52,\"y\":1,\"v\":89}]", "binary search tree");
+</script>
+</body>
+</html>

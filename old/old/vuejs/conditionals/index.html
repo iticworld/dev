@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VUEJS CONDITIONALS</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <span v-if="seen">Now you see me</span>
+    </div>
+    <script>
+        var app = new Vue({
+           el: "#app",
+           data: {
+               seen: false  /** seen: true */
+           }
+        });
+    </script>
+</body>
+</html>

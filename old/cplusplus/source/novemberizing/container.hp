@@ -1,0 +1,80 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 5.
+ */
+
+#ifndef   __NOVEMBERIZING__CONTAINER__HP__
+#define   __NOVEMBERIZING__CONTAINER__HP__
+
+#include <novemberizing/container.hh>
+
+namespace novemberizing
+{
+    inline container::container() : __synchronizer(nullptr)
+    {
+
+    }
+
+    inline container::container(const container & o) : __synchronizer(nullptr)
+    {
+
+    }
+
+    inline container::container(container && o) noexcept : __synchronizer(nullptr)
+    {
+
+    }
+
+    inline container::~container()
+    {
+        if(__synchronizer != nullptr)
+        {
+            delete __synchronizer;
+            __synchronizer = nullptr;
+        }
+    }
+
+    inline container & container::operator=(const container & o)
+    {
+        return *this;
+    }
+
+    inline container & container::operator=(container && o) noexcept
+    {
+        return *this;
+    }
+
+    inline int32 container::lock() const
+    {
+        return __synchronizer != nullptr ? __synchronizer->lock() : success;
+    }
+
+    inline int32 container::unlock() const
+    {
+        return __synchronizer != nullptr ? __synchronizer->unlock() : success;
+    }
+
+    inline int32 container::wait() const
+    {
+        return __synchronizer != nullptr ? __synchronizer->wait() : success;
+    }
+
+    inline int32 container::wait(int64 nanosecond) const
+    {
+        return __synchronizer != nullptr ? __synchronizer->wait(nanosecond) : success;
+    }
+
+    inline int32 container::wakeup() const
+    {
+        return __synchronizer != nullptr ? __synchronizer->wakeup() : success;
+    }
+
+    inline int32 container::wakeup(bool all) const
+    {
+        return __synchronizer != nullptr ? __synchronizer->wakeup(all) : success;
+    }
+}
+
+#endif // __NOVEMBERIZING__CONTAINER__HP__

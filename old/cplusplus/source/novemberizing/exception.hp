@@ -1,0 +1,47 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 4.
+ */
+
+#ifndef   __NOVEMBERIZING__EXCEPTION__HP__
+#define   __NOVEMBERIZING__EXCEPTION__HP__
+
+#include <novemberizing.hh>
+
+namespace novemberizing
+{
+    inline exception::exception()
+    {
+
+    }
+
+    inline exception::exception(const exception & o)
+    {
+
+    }
+
+    inline exception::exception(exception && o) noexcept
+    {
+
+    }
+
+    inline exception::~exception()
+    {
+
+    }
+
+    inline exception & exception::operator=(const exception & o)
+    {
+        return *this;
+    }
+
+    inline exception & exception::operator=(exception && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__EXCEPTION__HP__
+

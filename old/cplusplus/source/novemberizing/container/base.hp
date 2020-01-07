@@ -1,0 +1,48 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 5.
+ */
+
+#ifndef   __NOVEMBERIZING__CONTAINER_BASE__HP__
+#define   __NOVEMBERIZING__CONTAINER_BASE__HP__
+
+#include <novemberizing/container.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    inline container::base<T>::base()
+    {
+    }
+
+    template <typename T>
+    inline container::base<T>::base(const base<T> & o)
+    {
+    }
+
+    template <typename T>
+    inline container::base<T>::base(base<T> && o) noexcept
+    {
+    }
+
+    template <typename T>
+    inline container::base<T>::~base()
+    {
+    }
+
+    template <typename T>
+    inline container::base<T> & container::base<T>::operator=(const base<T> & o)
+    {
+        return *this;
+    }
+
+    template <typename T>
+    inline container::base<T> & container::base<T>::operator=(base<T> && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__CONTAINER_BASE__HP__

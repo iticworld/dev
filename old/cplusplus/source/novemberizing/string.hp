@@ -1,0 +1,1315 @@
+/**
+ *
+ * @author      novemberizing <developer@novemberizing.net>
+ * @since       0.0.1
+ * @date        2018. 6. 3.
+ */
+
+#ifndef   __NOVEMBERIZING__STRING__HP__
+#define   __NOVEMBERIZING__STRING__HP__
+
+#include <novemberizing/string.hh>
+#include <novemberizing/exception.hh>
+
+namespace novemberizing
+{
+    inline bool operator==(const string & x, const string & y) noexcept
+    {
+        return x.compare(y) == 0;
+    }
+
+    inline bool operator==(const char *   x, const string & y)
+    {
+        return y.compare(x) == 0;
+    }
+
+    inline bool operator==(const string & x, const char *   y)
+    {
+        return x.compare(y) == 0;
+    }
+
+    inline bool operator!=(const string & x, const string & y) noexcept
+    {
+        return x.compare(y) != 0;
+    }
+
+    inline bool operator!=(const char *   x, const string & y)
+    {
+        return y.compare(x) != 0;
+    }
+
+    inline bool operator!=(const string & x, const char *   y)
+    {
+        return x.compare(y) != 0;
+    }
+
+    inline bool operator< (const string & x, const string & y) noexcept
+    {
+        return x.compare(y) < 0;
+    }
+
+    inline bool operator< (const char *   x, const string & y)
+    {
+        return y.compare(x) > 0;
+    }
+
+    inline bool operator< (const string & x, const char *   y)
+    {
+        return x.compare(y) < 0;
+    }
+
+    inline bool operator<=(const string & x, const string & y) noexcept
+    {
+        return x.compare(y) <= 0;
+    }
+
+    inline bool operator<=(const char *   x, const string & y)
+    {
+        return y.compare(x) >= 0;
+    }
+
+    inline bool operator<=(const string & x, const char *   y)
+    {
+        return x.compare(y) <= 0;
+    }
+
+    inline bool operator> (const string & x, const string & y) noexcept
+    {
+        return x.compare(y) > 0;
+    }
+
+    inline bool operator> (const char *   x, const string & y)
+    {
+        return y.compare(x) < 0;
+    }
+
+    inline bool operator> (const string & x, const char *   y)
+    {
+        return x.compare(y) > 0;
+    }
+
+    inline bool operator>=(const string & x, const string & y) noexcept
+    {
+        return x.compare(y) >= 0;
+    }
+
+    inline bool operator>=(const char *   x, const string & y)
+    {
+        return y.compare(x) <= 0;
+    }
+
+    inline bool operator>=(const string & x, const char *   y)
+    {
+        return x.compare(y) >= 0;
+    }
+
+    inline const uint64 string::page = 64;
+
+    inline char * string::create(const char * source)
+    {
+        return create(source, source != nullptr ? string::length(source) : 0);
+    }
+
+    inline char * string::create(const char * source, uint64 len)
+    {
+        if(source != nullptr && len > 0)
+        {
+            char * out = core::memory::allocate<char>(len + 1);
+            core::memory::copy<char>(out, source, len);
+            out[len] = 0;
+            return out;
+        }
+        else
+        {
+            char * out = core::memory::allocate<char>(1);
+            out[0] = 0;
+            return out;
+        }
+    }
+
+    inline char * string::create(char c)
+    {
+        char * out = core::memory::allocate<char>(2);
+        out[0] = c;
+        out[1] = 0;
+        return out;
+    }
+
+    inline char * string::create(char c, uint64 len)
+    {
+        char * out = core::memory::allocate<char>(len + 1);
+        core::memory::fill<char>(out, c, len);
+        out[len] = 0;
+        return out;
+    }
+
+    inline char * string::reset(char * p, const char * source)
+    {
+        return reset(p, source, source != nullptr ? string::length(source) : 0);
+    }
+
+    inline char * string::reset(char * p, const char * source, uint64 len)
+    {
+        if(source != nullptr && len > 0)
+        {
+            p = core::memory::allocate<char>(p, len + 1);
+            core::memory::copy<char>(p, source, len);
+            p[len] = 0;
+            return p;
+        }
+        else
+        {
+            p = core::memory::allocate<char>(p, 1);
+            p[0] = 0;
+            return p;
+        }
+    }
+
+    inline char * string::reset(char * p, char c)
+    {
+        p = core::memory::allocate<char>(p, 2);
+        p[0] = c;
+        p[1] = 0;
+        return p;
+    }
+
+    inline char * string::reset(char * p, char c, uint64 len)
+    {
+        p = core::memory::allocate<char>(p, len + 1);
+        core::memory::fill<char>(p, c, len);
+        p[len] = 0;
+        return p;
+    }
+
+    inline string::string() : __capacity(0), __size(0), __data(nullptr)
+    {
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__capacity);
+        __data[__size] = 0;
+    }
+
+    inline string::string(const string & o) : __capacity(o.__capacity), __size(o.__size), __data(nullptr)
+    {
+        __data = core::memory::allocate<char>(__capacity);
+        core::memory::copy<char>(__data, o.__data, o.__size);
+        __data[o.__size] = 0;
+    }
+
+    inline string::string(const string & o, uint64 pos) : __capacity(0), __size(0), __data(nullptr)
+    {
+        if(o.__size < pos)
+        {
+            __size = 0;
+            /** implement */
+        }
+        else
+        {
+            __size = o.__size - pos;
+        }
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__capacity);
+        core::memory::copy<char>(__data, &o.__data[pos], __size);
+        __data[__size] = 0;
+    }
+
+    inline string::string(const string & o, uint64 pos, uint64 len) : __capacity(0), __size(0), __data(nullptr)
+    {
+        if(o.__size < pos)
+        {
+            __size = 0;
+            /** implement */
+        }
+        else
+        {
+            __size = (len < o.__size - pos ? len : o.__size - pos);
+        }
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__capacity);
+        core::memory::copy<char>(__data, &o.__data[pos], __size);
+        __data[__size] = 0;
+    }
+
+    inline string::string(string && o) noexcept : __capacity(o.__capacity), __size(o.__size), __data(o.__data)
+    {
+        o.__capacity = 0;
+        o.__size = 0;
+        o.__data = nullptr;
+    }
+
+    inline string::string(const char * s) : __capacity(0), __size(0), __data(nullptr)
+    {
+        __size = string::length(s);
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__capacity);
+        core::memory::copy<char>(__data, s, __size);
+        __data[__size] = 0;
+    }
+
+    inline string::string(const char * s, uint64 len) : __capacity(0), __size(0), __data(nullptr)
+    {
+        __size = (s != nullptr ? len : 0);
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__capacity);
+        core::memory::copy<char>(__data, s, __size);
+        __data[__size] = 0;
+    }
+
+    inline string::string(char c) : __capacity(0), __size(0), __data(nullptr)
+    {
+        __size = 1;
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__capacity);
+        __data[0] = c;
+        __data[__size] = 0;
+    }
+
+    inline string::string(char c, uint64 len) : __capacity(0), __size(0), __data(nullptr)
+    {
+        __size = len;
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__capacity);
+        __data[__size] = 0;
+    }
+
+    inline string::~string()
+    {
+        __data = core::memory::deallocate<char>(__data);
+    }
+
+    inline uint64 string::capacity() const { return __capacity; }
+
+    inline uint64 string::size() const { return __size; }
+
+    inline const char * string::v() const { return __data; }
+
+    inline string & string::operator=(const string & o) { return assign(o); }
+    inline string & string::operator=(string && o) noexcept { return assign(move(o)); }
+    inline string & string::operator=(const char * s){ return assign(s); }
+    inline string & string::operator=(char c){ return assign(c); }
+
+    inline string & string::operator+=(const string & o) { return append(o); }
+    inline string & string::operator+=(string && o) { return append(move(o)); }
+    inline string & string::operator+=(const char * s){ return append(s); }
+    inline string & string::operator+=(char c){ return append(c); }
+
+    inline char & string::operator[](uint64 i){ return at(i); }
+    inline const char & string::operator[](uint64 i) const { return at(i); }
+
+    inline char & string::at(uint64 i)
+    {
+        if(__size <= i)
+        {
+            throw exception();
+        }
+        return __data[i];
+    }
+
+    inline const char & string::at(uint64 i) const
+    {
+        if(__size <= i)
+        {
+            throw exception();
+        }
+        return __data[i];
+    }
+
+    inline string & string::assign(const string & o)
+    {
+        if(&o != this)
+        {
+            __capacity = o.__capacity;
+            __size = o.__size;
+            __data = core::memory::allocate<char>(__data, __capacity);
+            core::memory::copy<char>(__data, o.__data, __size);
+            __data[__size] = 0;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::assign(const string & o, uint64 pos)
+    {
+        if(&o != this)
+        {
+            if(o.__size < pos)
+            {
+                __size = 0;
+                throw exception();
+            }
+            else
+            {
+                __size = o.__size - pos;
+            }
+            __capacity = capacity::get(__size, string::page);
+            __data = core::memory::allocate<char>(__data, __capacity);
+            if(o.__data != nullptr)
+            {
+                core::memory::copy<char>(__data, &o.__data[pos], __size);
+            }
+            __data[__size] = 0;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::assign(const string & o, uint64 pos, uint64 len)
+    {
+        if(&o != this)
+        {
+            if(o.__size < pos)
+            {
+                __size = 0;
+                throw exception();
+            }
+            else
+            {
+                __size = (len < o.__size - pos ? len : o.__size - pos);
+            }
+            __capacity = capacity::get(__size, string::page);
+            __data = core::memory::allocate<char>(__data, __capacity);
+            if(o.__data != nullptr)
+            {
+                core::memory::copy<char>(__data, &o.__data[pos], __size);
+            }
+            __data[__size] = 0;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::assign(string && o) noexcept
+    {
+        if(&o != this)
+        {
+            __data = core::memory::deallocate<char>(__data);
+
+            __capacity = o.__capacity;
+            __size = o.__size;
+            __data = o.__data;
+
+            o.__capacity = 0;
+            o.__size = 0;
+            o.__data = nullptr;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::assign(const char * s)
+    {
+        __size = (s != nullptr ? string::length(s) : 0);
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        core::memory::copy<char>(__data, s, __size);
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::assign(const char * s, uint64 len)
+    {
+        if(s == nullptr && len > 0)
+        {
+            throw exception();
+        }
+        __size = (s != nullptr ? len : 0);
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        core::memory::copy<char>(__data, s, __size);
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::assign(char c)
+    {
+        __size = 1;
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        __data[0] = c;
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::assign(char c, uint64 len)
+    {
+        __size = len;
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        core::memory::fill<char>(__data, c, __size);
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::append(const string & o)
+    {
+        if(&o != this)
+        {
+            __capacity = capacity::get(__size + o.__size, string::page);
+            __data = core::memory::allocate<char>(__data, __capacity);
+            core::memory::copy<char>(&__data[__size], o.__data, o.__size);
+            __size += o.__size;
+            __data[__size] = 0;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::append(const string & o, uint64 pos)
+    {
+        if(&o != this)
+        {
+            uint64 len = 0;
+            if(o.__size < pos)
+            {
+                throw exception();  /** implement conditional throw */
+            }
+            else
+            {
+                len = o.__size - pos;
+            }
+            __capacity = capacity::get(__size + len, string::page);
+            __data = core::memory::allocate<char>(__data, __capacity);
+            if(o.__data != nullptr)
+            {
+                core::memory::copy<char>(&__data[__size], &o.__data[pos], len);
+            }
+            __size += len;
+            __data[__size] = 0;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::append(const string & o, uint64 pos, uint64 len)
+    {
+        if(&o != this)
+        {
+            if(o.__size < pos)
+            {
+                len = 0;
+                throw exception();  /** implement conditional throw */
+            }
+            else
+            {
+                len = (len < o.__size - pos ? len : o.__size - pos);
+            }
+            __capacity = capacity::get(__size + len, string::page);
+            __data = core::memory::allocate<char>(__data, __capacity);
+            if(o.__data != nullptr)
+            {
+                core::memory::copy<char>(&__data[__size], &o.__data[pos], len);
+            }
+            __size += len;
+            __data[__size] = 0;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::append(string && o)
+    {
+        if(&o != this)
+        {
+            __capacity = capacity::get(__size + o.__size, string::page);
+            __data = core::memory::allocate<char>(__data, __capacity);
+            core::memory::copy<char>(&__data[__size], o.__data, o.__size);
+            __size += o.__size;
+            __data[__size] = 0;
+        }
+        else
+        {
+            /** implement */
+        }
+        return *this;
+    }
+
+    inline string & string::append(const char * s)
+    {
+        uint64 len = (s != nullptr ? string::length(s) : 0);
+        __capacity = capacity::get(__size + len, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        core::memory::copy<char>(&__data[__size], s, len);
+        __size += len;
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::append(const char * s, uint64 len)
+    {
+        if(s == nullptr && len > 0)
+        {
+            throw exception();
+        }
+        len = (s != nullptr ? len : 0);
+        __capacity = capacity::get(__size + len, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        core::memory::copy<char>(&__data[__size], s, len);
+        __size += len;
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::append(char c)
+    {
+        __capacity = capacity::get(__size + 1, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        __data[__size] = c;
+        __size += 1;
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::append(char c, uint64 len)
+    {
+        __capacity = capacity::get(__size + len, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        core::memory::fill<char>(&__data[__size], c, len);
+        __size += len;
+        __data[__size] = 0;
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, const string & o)
+    {
+        if(offset < __size)
+        {
+            if(o.__size > 0)
+            {
+                __capacity = capacity::get(__size + o.__size, string::page);
+                __data = core::memory::allocate<char>(__data, __capacity);
+                core::memory::move<char>(&__data[offset + o.__size], &__data[offset], __size - offset);
+                core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                __size += o.__size;
+                __data[__size] = 0;
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, const string & o, uint64 pos)
+    {
+        if(offset < __size)
+        {
+            uint64 len = 0;
+            if(o.__size < pos)
+            {
+                throw exception();
+            }
+            else
+            {
+                len = o.__size - pos;
+            }
+            if(len > 0)
+            {
+                __capacity = capacity::get(__size + len, string::page);
+                __data = core::memory::allocate<char>(__data, __capacity);
+                core::memory::move<char>(&__data[offset + len], &__data[offset], __size - offset);
+                core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                __size += len;
+                __data[__size] = 0;
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o, pos);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, const string & o, uint64 pos, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(o.__size < pos)
+            {
+                len = 0;
+                throw exception();
+            }
+            else
+            {
+                len = (len < o.__size - pos ? len : o.__size - pos);
+            }
+            if(len > 0)
+            {
+                __capacity = capacity::get(__size + len, string::page);
+                __data = core::memory::allocate<char>(__data, __capacity);
+                core::memory::move<char>(&__data[offset + len], &__data[offset], __size - offset);
+                core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                __size += len;
+                __data[__size] = 0;
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o, pos, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, string && o)
+    {
+        if(offset < __size)
+        {
+            if(o.__size > 0)
+            {
+                __capacity = capacity::get(__size + o.__size, string::page);
+                __data = core::memory::allocate<char>(__data, __capacity);
+                core::memory::move<char>(&__data[offset + o.__size], &__data[offset], __size - offset);
+                core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                __size += o.__size;
+                __data[__size] = 0;
+            }
+        }
+        else if(offset == __size)
+        {
+            append(move(o));
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, const char * s)
+    {
+        if(offset < __size)
+        {
+            uint64 len = (s != nullptr ? string::length(s) : 0);
+            if(len > 0)
+            {
+                __capacity = capacity::get(__size + len, string::page);
+                __data = core::memory::allocate<char>(__data, __capacity);
+                core::memory::move<char>(&__data[offset + len], &__data[offset], __size - offset);
+                core::memory::copy<char>(&__data[offset], s, len);
+                __size += len;
+                __data[__size] = 0;
+            }
+        }
+        else if(offset == __size)
+        {
+            append(s);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, const char * s, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(s == nullptr && len > 0)
+            {
+                throw exception();
+            }
+            len = (s != nullptr ? len : 0);
+            if(len > 0)
+            {
+                __capacity = capacity::get(__size + len, string::page);
+                __data = core::memory::allocate<char>(__data, __capacity);
+                core::memory::move<char>(&__data[offset + len], &__data[offset], __size - offset);
+                core::memory::copy<char>(&__data[offset], s, len);
+                __size += len;
+                __data[__size] = 0;
+            }
+        }
+        else if(offset == __size)
+        {
+            append(s, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, char c)
+    {
+        if(offset < __size)
+        {
+            __capacity = capacity::get(__size + 1, string::page);
+            __data = core::memory::allocate<char>(__data, __capacity);
+            core::memory::move<char>(&__data[offset + 1], &__data[offset], __size - offset);
+            __data[offset] = c;
+            __size += 1;
+            __data[__size] = 0;
+        }
+        else if(offset == __size)
+        {
+            append(c);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::insert(uint64 offset, char c, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(len > 0)
+            {
+                __capacity = capacity::get(__size + len, string::page);
+                __data = core::memory::allocate<char>(__data, __capacity);
+                core::memory::move<char>(&__data[offset + len], &__data[offset], __size - offset);
+                core::memory::fill<char>(&__data[offset], c, len);
+                __size += len;
+                __data[__size] = 0;
+            }
+        }
+        else if(offset == __size)
+        {
+            append(c, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, const string & o)
+    {
+        if(offset < __size)
+        {
+            if(o.__size > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < o.__size)
+                    {
+                        __capacity = capacity::get(__size + (o.__size - n), string::page);
+                        __data = core::memory::allocate<char>(__data, __capacity);
+                        core::memory::move<char>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                        __size += (o.__size - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n ==  o.__size)
+                    {
+                        core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                    }
+                    else
+                    {
+                        core::memory::move<char>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                        __size -= (n - o.__size);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, o);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, const string & o, uint64 pos)
+    {
+        if(offset < __size)
+        {
+            uint64 len = 0;
+            if(o.__size < pos)
+            {
+                throw exception();
+            }
+            else
+            {
+                len = o.__size - pos;
+            }
+
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), string::page);
+                        __data = core::memory::allocate<char>(__data, __capacity);
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                        __size += (len - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n == len)
+                    {
+                        core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                    }
+                    else
+                    {
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                        __size -= (n - len);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, o, pos);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o, pos);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, const string & o, uint64 pos, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(o.__size < pos)
+            {
+                len = 0;
+                throw exception();
+            }
+            else
+            {
+                len = (o.__size - pos < len ? o.__size - pos : len);
+            }
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), string::page);
+                        __data = core::memory::allocate<char>(__data, __capacity);
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                        __size += (len - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n == len)
+                    {
+                        core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                    }
+                    else
+                    {
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], &o.__data[pos], len);
+                        __size -= (n - len);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, o, pos, len);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o, pos, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, string && o)
+    {
+        if(offset < __size)
+        {
+            if(o.__size > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < o.__size)
+                    {
+                        __capacity = capacity::get(__size + (o.__size - n), string::page);
+                        __data = core::memory::allocate<char>(__data, __capacity);
+                        core::memory::move<char>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                        __size += (o.__size - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n ==  o.__size)
+                    {
+                        core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                    }
+                    else
+                    {
+                        core::memory::move<char>(&__data[offset + o.__size], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], o.__data, o.__size);
+                        __size -= (n - o.__size);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, move(o));
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(o);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, const char * s)
+    {
+        if(offset < __size)
+        {
+            uint64 len = (s != nullptr ? string::length(s) : 0);
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), string::page);
+                        __data = core::memory::allocate<char>(__data, __capacity);
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], s, len);
+                        __size += (len - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n == len)
+                    {
+                        core::memory::copy<char>(&__data[offset], s, len);
+                    }
+                    else
+                    {
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], s, len);
+                        __size -= (n - len);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, s, len);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(s);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, const char * s, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(s == nullptr && len > 0)
+            {
+                len = 0;
+                throw exception();
+            }
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), string::page);
+                        __data = core::memory::allocate<char>(__data, __capacity);
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], s, len);
+                        __size += (len - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n == len)
+                    {
+                        core::memory::copy<char>(&__data[offset], s, len);
+                    }
+                    else
+                    {
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::copy<char>(&__data[offset], s, len);
+                        __size -= (n - len);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, s, len);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(s, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, char c)
+    {
+        if(offset < __size)
+        {
+            n = __size - offset < n ? __size - offset : n;
+            if(n > 0)
+            {
+                if(n == 1)
+                {
+                    __data[offset] = c;
+                }
+                else
+                {
+                    core::memory::move<char>(&__data[offset + 1], &__data[offset + n], __size - offset - n);
+                    __data[offset] = c;
+                    __size -= (n - 1);
+                    __data[__size] = 0;
+                }
+            }
+            else
+            {
+                insert(offset, c);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(c);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::replace(uint64 offset, uint64 n, char c, uint64 len)
+    {
+        if(offset < __size)
+        {
+            if(len > 0)
+            {
+                n = __size - offset < n ? __size - offset : n;
+                if(n > 0)
+                {
+                    if(n < len)
+                    {
+                        __capacity = capacity::get(__size + (len - n), string::page);
+                        __data = core::memory::allocate<char>(__data, __capacity);
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::fill<char>(&__data[offset], c, len);
+                        __size += (len - n);
+                        __data[__size] = 0;
+                    }
+                    else if(n == len)
+                    {
+                        core::memory::fill<char>(&__data[offset], c, len);
+                    }
+                    else
+                    {
+                        core::memory::move<char>(&__data[offset + len], &__data[offset + n], __size - offset - n);
+                        core::memory::fill<char>(&__data[offset], c, len);
+                        __size -= (n - len);
+                        __data[__size] = 0;
+                    }
+                }
+                else
+                {
+                    insert(offset, c, len);
+                }
+            }
+            else if(n > 0)
+            {
+                erase(offset, n);
+            }
+        }
+        else if(offset == __size)
+        {
+            append(c, len);
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::erase()
+    {
+        __size = 0;
+        if(__data != nullptr)
+        {
+            __data[__size] = 0;
+        }
+        return *this;
+    }
+
+    inline string & string::erase(uint64 offset)
+    {
+        if(offset == 0)
+        {
+            __size = 0;
+            if(__data != nullptr)
+            {
+                __data[__size] = 0;
+            }
+        }
+        else if(offset <= __size)
+        {
+            __size = offset;
+            __data[__size] = 0;
+        }
+        else
+        {
+            throw exception();
+        }
+        return *this;
+    }
+
+    inline string & string::erase(uint64 offset, uint64 n)
+    {
+        if(n > 0)
+        {
+            if(offset == 0)
+            {
+                if(n < __size)
+                {
+                    core::memory::move<char>(__data, &__data[n], __size - n);
+                    __size -= n;
+                    __data[__size] = 0;
+                }
+                else
+                {
+                    __size = 0;
+                    if(__data != nullptr)
+                    {
+                        __data[__size] = 0;
+                    }
+                }
+            }
+            else if(offset <= __size)
+            {
+                if(offset + n < __size)
+                {
+                    core::memory::move<char>(&__data[offset], &__data[offset + n], __size - offset - n);
+                    __size -= n;
+                    __data[__size] = 0;
+                }
+                else
+                {
+                    __size = offset;
+                    __data[__size] = 0;
+                }
+            }
+            else
+            {
+                throw exception();
+            }
+        }
+        return *this;
+    }
+
+    inline string & string::clear()
+    {
+        __size = 0;
+        __capacity = capacity::get(__size, string::page);
+        __data = core::memory::allocate<char>(__data, __capacity);
+        return *this;
+    }
+
+}
+
+#endif // __NOVEMBERIZING__STRING__HP__

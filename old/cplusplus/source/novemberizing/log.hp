@@ -1,0 +1,69 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__LOG__HP__
+#define   __NOVEMBERIZING__LOG__HP__
+
+#include <novemberizing/log.hh>
+
+namespace novemberizing
+{
+    namespace log
+    {
+        inline void e(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "error", message.v(), file.v(), line, func.v());
+        }
+
+        inline void w(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "warning", message.v(), file.v(), line, func.v());
+        }
+
+        inline void c(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "caution", message.v(), file.v(), line, func.v());
+        }
+
+        inline void n(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "notice", message.v(), file.v(), line, func.v());
+        }
+
+        inline void i(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "information", message.v(), file.v(), line, func.v());
+        }
+
+        inline void d(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "debug", message.v(), file.v(), line, func.v());
+        }
+
+        inline void v(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "verbose", message.v(), file.v(), line, func.v());
+        }
+
+        inline void f(const string & tag, const string & file, uint32 line, const string & func, const string & message)
+        {
+            printf("[%s/%s] %s (%s:%d %s)\n", tag.v(), "flow", message.v(), file.v(), line, func.v());
+        }
+    }
+}
+
+#define FUNCTION_START(tag, fmt, ...)      novemberizing::log::f(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define FUNCTION_END(tag, fmt, ...)      novemberizing::log::f(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define ERROR_LOG(tag, fmt, ...)      novemberizing::log::e(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define WARNING_LOG(tag, fmt, ...)      novemberizing::log::w(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define CAUTION_LOG(tag, fmt, ...)      novemberizing::log::c(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define NOTICE_LOG(tag, fmt, ...)      novemberizing::log::n(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define INFORMATION_LOG(tag, fmt, ...)      novemberizing::log::i(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define DEBUG_LOG(tag, fmt, ...)      novemberizing::log::d(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+#define VERBOSE_LOG(tag, fmt, ...)      novemberizing::log::v(tag, __FILE__, __LINE__, __func__, string::format(fmt, ##__VA_ARGS__))
+
+#endif // __NOVEMBERIZING__LOG__HP__

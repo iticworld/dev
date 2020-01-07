@@ -1,0 +1,29 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 7. 3.
+ */
+
+#ifndef   __NOVEMBERIZING__MESSAGE_DIGEST_V5__HP__
+#define   __NOVEMBERIZING__MESSAGE_DIGEST_V5__HP__
+
+#include <novemberizing/message/digest/v5.hh>
+
+namespace novemberizing
+{
+    namespace message
+    {
+        namespace digest
+        {
+            inline v5::~v5() {}
+            inline v5::v5() {}
+            inline v5::v5(const v5 & o) {}
+            inline v5::v5(v5 && o) noexcept {}
+            inline v5 & v5::operator=(const v5 & o) { return *this; }
+            inline v5 & v5::operator=(v5 && o) noexcept { return *this; }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__MESSAGE_DIGEST_V5__HP__

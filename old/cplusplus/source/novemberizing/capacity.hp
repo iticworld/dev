@@ -1,0 +1,52 @@
+/**
+ *
+ * @author      novemberizing <developer@novemberizing.net>
+ * @since       0.0.1
+ * @date        2018. 6. 4.
+ */
+
+#ifndef   __NOVEMBERIZING__CAPACITY__HP__
+#define   __NOVEMBERIZING__CAPACITY__HP__
+
+#include <novemberizing/capacity.hh>
+
+namespace novemberizing
+{
+    inline uint64 capacity::get(uint64 n, uint64 page)
+    {
+        page = (page == 0 ? 1 : page);
+        return (n / page + 1) * page;
+    }
+
+    inline capacity::capacity()
+    {
+
+    }
+
+    inline capacity::capacity(const capacity & o)
+    {
+
+    }
+
+    inline capacity::capacity(capacity && o) noexcept
+    {
+
+    }
+
+    inline capacity::~capacity()
+    {
+
+    }
+
+    inline capacity & capacity::operator=(const capacity & o)
+    {
+        return *this;
+    }
+
+    inline capacity & capacity::operator=(capacity && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__CAPACITY__HP__

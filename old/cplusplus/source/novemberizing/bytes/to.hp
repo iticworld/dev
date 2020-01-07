@@ -1,0 +1,150 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__TO__HP__
+#define   __NOVEMBERIZING__TO__HP__
+
+#include <novemberizing.hh>
+
+namespace novemberizing
+{
+    inline bytes::to::to()
+    {
+    }
+
+    inline bytes::to::to(const to & o)
+    {
+    }
+
+    inline bytes::to::to(to && o) noexcept
+    {
+    }
+
+    inline bytes::to::~to()
+    {
+    }
+
+    inline bytes::to & bytes::to::operator=(const to & o)
+    {
+        if(&o != this)
+        {
+
+        }
+        return *this;
+    }
+
+    inline bytes::to & bytes::to::operator=(to && o) noexcept
+    {
+        if(&o != this)
+        {
+
+        }
+        return *this;
+    }
+
+    inline uint16 bytes::to::uinteger16(const bytes & o, uint64 offset, bool invert)
+    {
+        if(o.size() < offset + 2)
+        {
+            throw exception();
+        }
+        uint16 v = 0;
+        memory::copy<byte>((byte *) &v, &o.__data[offset], sizeof(uint16));
+        if(invert)
+        {
+            v = endian::convert(v);
+        }
+
+        return v;
+    }
+
+    inline uint32 bytes::to::uinteger32(const bytes & o, uint64 offset, bool invert)
+    {
+        if(o.size() < offset + 4)
+        {
+            throw exception();
+        }
+        uint32 v = 0;
+        memory::copy<byte>((byte *) &v, &o.__data[offset], sizeof(uint32));
+        if(invert)
+        {
+            v = endian::convert(v);
+        }
+
+        return v;
+    }
+
+    inline uint64 bytes::to::uinteger64(const bytes & o, uint64 offset, bool invert)
+    {
+        if(o.size() < offset + 8)
+        {
+            throw exception();
+        }
+        uint64 v = 0;
+        memory::copy<byte>((byte *) &v, &o.__data[offset], sizeof(uint64));
+        if(invert)
+        {
+            v = endian::convert(v);
+        }
+
+        return v;
+    }
+
+    inline int16 bytes::to::integer16(const bytes & o, uint64 offset, bool invert)
+    {
+        if(o.size() < offset + 2)
+        {
+            throw exception();
+        }
+        int16 v = 0;
+        memory::copy<byte>((byte *) &v, &o.__data[offset], sizeof(int16));
+        if(invert)
+        {
+            v = endian::convert(v);
+        }
+        return v;
+    }
+
+    inline int32 bytes::to::integer32(const bytes & o, uint64 offset, bool invert)
+    {
+        if(o.size() < offset + 4)
+        {
+            throw exception();
+        }
+        int32 v = 0;
+        memory::copy<byte>((byte *) &v, &o.__data[offset], sizeof(int32));
+        if(invert)
+        {
+            v = endian::convert(v);
+        }
+        return v;
+    }
+
+    inline int64 bytes::to::integer64(const bytes & o, uint64 offset, bool invert)
+    {
+        if(o.size() < offset + 8)
+        {
+            throw exception();
+        }
+        int64 v = 0;
+        memory::copy<byte>((byte *) &v, &o.__data[offset], sizeof(int64));
+        if(invert)
+        {
+            v = endian::convert(v);
+        }
+        return v;
+    }
+
+    inline int16 bytes::to::integer16(const bytes & o, uint64 offset){ return integer16(o, offset, false); }
+    inline int32 bytes::to::integer32(const bytes & o, uint64 offset){ return integer32(o, offset, false); }
+    inline int64 bytes::to::integer64(const bytes & o, uint64 offset){ return integer64(o, offset, false); }
+    inline uint16 bytes::to::uinteger16(const bytes & o, uint64 offset){ return uinteger16(o, offset, false); }
+    inline uint32 bytes::to::uinteger32(const bytes & o, uint64 offset){ return uinteger32(o, offset, false); }
+    inline uint64 bytes::to::uinteger64(const bytes & o, uint64 offset){ return uinteger64(o, offset, false); }
+}
+
+#endif // __NOVEMBERIZING__TO__HP__

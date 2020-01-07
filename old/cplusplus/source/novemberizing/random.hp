@@ -1,0 +1,22 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 10
+ */
+
+#ifndef   __NOVEMBERIZING__RANDOM__HP__
+#define   __NOVEMBERIZING__RANDOM__HP__
+
+#include <novemberizing/random.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    T random::get(){ return static_cast<T>(__get()); }
+
+    template <typename T>
+    T random::get(int limit) { return limit > 0 ? static_cast<T>(__get() % limit) : get<int>(); }
+}
+
+#endif // __NOVEMBERIZING__RANDOM__HP__

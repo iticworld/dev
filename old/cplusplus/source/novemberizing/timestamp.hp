@@ -1,0 +1,193 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 19.
+ */
+
+#ifndef   __NOVEMBERIZING__TIMESTAMP__HP__
+#define   __NOVEMBERIZING__TIMESTAMP__HP__
+
+#include <novemberizing/timestamp.hh>
+
+namespace novemberizing
+{
+    inline timestamp operator+ (const timestamp & x, const timestamp & y)
+    {
+        timestamp v = x;
+        return v += y;
+    }
+
+    inline timestamp operator- (const timestamp & x, const timestamp & y)
+    {
+        timestamp v = x;
+        return v -= y;
+    }
+
+    inline bool      operator==(const timestamp & x, const timestamp & y)
+    {
+        return x.second() == y.second() && x.nanosecond() == y.nanosecond();
+    }
+
+    inline bool      operator!=(const timestamp & x, const timestamp & y)
+    {
+        return x.second() != y.second() || x.nanosecond() != y.nanosecond();
+    }
+
+    inline bool      operator< (const timestamp & x, const timestamp & y)
+    {
+        return x.second() < y.second() || (x.second() == y.second() && x.nanosecond() < y.nanosecond());
+    }
+    inline bool      operator<=(const timestamp & x, const timestamp & y)
+    {
+        return x.second() < y.second() || (x.second() == y.second() && x.nanosecond() <= y.nanosecond());
+    }
+    inline bool      operator> (const timestamp & x, const timestamp & y)
+    {
+        return x.second() > y.second() || (x.second() == y.second() && x.nanosecond() > y.nanosecond());
+    }
+    inline bool      operator>=(const timestamp & x, const timestamp & y)
+    {
+        return x.second() > y.second() || (x.second() == y.second() && x.nanosecond() >= y.nanosecond());
+    }
+
+    inline timestamp timestamp::get() { return timestamp(); }
+
+    inline timestamp timestamp::gap(const timestamp & y)
+    {
+        timestamp x;
+        return x - y;
+    }
+
+    inline timestamp::timestamp(const timestamp & o) : __second(o.__second), __nanosecond(o.__nanosecond)
+    {
+    }
+
+    inline timestamp::timestamp(timestamp && o) noexcept : __second(o.__second), __nanosecond(o.__nanosecond)
+    {
+    }
+
+    inline timestamp::timestamp(int64 second, int64 nanosecond) : __second(0), __nanosecond(0)
+    {
+        __second = second;
+        this->nanosecond(nanosecond);
+    }
+
+    inline timestamp::~timestamp()
+    {
+        __second = 0;
+        __nanosecond = 0;
+    }
+
+    inline timestamp & timestamp::operator=(const timestamp & o)
+    {
+        if(&o != this)
+        {
+            __second = o.__second;
+            __nanosecond = o.__nanosecond;
+        }
+        return *this;
+    }
+
+    inline timestamp & timestamp::operator=(timestamp && o) noexcept
+    {
+        if(&o != this)
+        {
+            __second = o.__second;
+            __nanosecond = o.__nanosecond;
+        }
+        return *this;
+    }
+
+    inline timestamp & timestamp::operator+=(const timestamp & o) { return add(o); }
+    inline timestamp & timestamp::operator+=(timestamp && o) { return add(o); }
+    inline timestamp & timestamp::operator-=(const timestamp & o) { return sub(o); }
+    inline timestamp & timestamp::operator-=(timestamp && o) { return sub(o); }
+
+    inline int64 timestamp::second() const { return __second; }
+
+    inline int64 timestamp::nanosecond() const { return __nanosecond; }
+
+    inline void timestamp::second(int64 v){ __second = v; }
+
+    inline void timestamp::nanosecond(int64 v)
+    {
+        int64 n = v >= 0 ? v : (-v);
+        if(v >= 0)
+        {
+            __second += (n/1000000000);
+            __nanosecond = (n%1000000000);
+        }
+        else
+        {
+            __second -= (n/1000000000 + 1);
+            __nanosecond = 1000000000 - (n%1000000000);
+        }
+    }
+
+    inline void timestamp::set(int64 second, int64 nanosecond)
+    {
+        __second = second;
+        this->nanosecond(nanosecond);
+    }
+
+    inline void timestamp::set(const timestamp & o)
+    {
+        if(&o != this)
+        {
+            __second = o.__second;
+            __nanosecond = o.__nanosecond;
+        }
+    }
+
+    inline void timestamp::set(timestamp && o)
+    {
+        if(&o != this)
+        {
+            __second = o.__second;
+            __nanosecond = o.__nanosecond;
+        }
+    }
+
+    inline timestamp & timestamp::add(const timestamp & o)
+    {
+        if(&o != this)
+        {
+            __second += o.__second;
+            nanosecond(__nanosecond + o.__nanosecond);
+        }
+        return *this;
+    }
+
+    inline timestamp & timestamp::add(timestamp && o)
+    {
+        if(&o != this)
+        {
+            __second += o.__second;
+            nanosecond(__nanosecond + o.__nanosecond);
+        }
+        return *this;
+    }
+
+    inline timestamp & timestamp::sub(const timestamp & o)
+    {
+        if(&o != this)
+        {
+            __second -= o.__second;
+            nanosecond(__nanosecond - o.__nanosecond);
+        }
+        return *this;
+    }
+
+    inline timestamp & timestamp::sub(timestamp && o)
+    {
+        if(&o != this)
+        {
+            __second -= o.__second;
+            nanosecond(__nanosecond - o.__nanosecond);
+        }
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__TIMESTAMP__HP__

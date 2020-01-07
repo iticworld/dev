@@ -1,0 +1,242 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 27.
+ */
+
+#ifndef   __NOVEMBERIZING__POINTER__HP__
+#define   __NOVEMBERIZING__POINTER__HP__
+
+#include <novemberizing/pointer.hh>
+#include <novemberizing/exception.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    pointer<T>::pointer() : __value(nullptr), __count(nullptr), __delete(nullptr)
+    {
+    }
+
+    template <typename T>
+    pointer<T>::pointer(const pointer<T> & o) : __value(nullptr), __count(nullptr), __delete(nullptr)
+    {
+        if(&o != this)
+        {
+            __value = o.__value;
+            __count = o.__count;
+            if(__count)
+            {
+                (*__count)++;   /** todo: support atomic increase. */
+            }
+        }
+        else
+        {
+            /** todo: check this. */
+        }
+    }
+
+    template <typename T>
+    pointer<T>::pointer(pointer<T> && o) noexcept : __value(nullptr), __count(nullptr), __delete(nullptr)
+    {
+        if(&o != this)
+        {
+            __value = o.__value;
+            __count = o.__count;
+
+            o.__value = nullptr;
+            o.__count = nullptr;
+        }
+        else
+        {
+            /** todo: check this. */
+        }
+    }
+
+    template <typename T>
+    pointer<T>::pointer(T * p) : __value(p), __count(nullptr), __delete(nullptr)
+    {
+        if(__value)
+        {
+            __count = core::memory::allocate<int64>(1);
+            (*__count) = 1;
+        }
+    }
+
+    template <typename T>
+    pointer<T>::pointer(T * p, function<T * (T *)> d) : __value(p), __count(nullptr), __delete(d)
+    {
+        if(__value)
+        {
+            __count = core::memory::allocate<int64>(1);
+            (*__count) = 1;
+        }
+    }
+
+    template <typename T>
+    pointer<T>::~pointer()
+    {
+        if(__count)
+        {
+            (*__count)--;
+            if(*__count <= 0)
+            {
+                core::memory::deallocate<int64>(__count);
+                if(__value != nullptr)
+                {
+                    if(__delete)
+                    {
+                        __value = __delete(__value);
+                    }
+                    else
+                    {
+                        delete __value;
+                        __value = nullptr;
+                    }
+                }
+            }
+        }
+        __count = nullptr;
+        __value = nullptr;
+    }
+
+    template <typename T>
+    pointer<T> & pointer<T>::operator=(const pointer<T> & o)
+    {
+        if(&o != this)
+        {
+            clear();
+            __value = o.__value;
+            __count = o.__count;
+            if(__count)
+            {
+                (*__count) += 1;
+            }
+        }
+        return *this;
+    }
+
+    template <typename T>
+    pointer<T> & pointer<T>::operator=(pointer<T> && o) noexcept
+    {
+        if(&o != this)
+        {
+            clear();
+            __value = o.__value;
+            __count = o.__count;
+
+            o.__value = nullptr;
+            o.__count = nullptr;
+        }
+        return *this;
+    }
+
+    template <typename T>
+    void pointer<T>::clear()
+    {
+        if(__count)
+        {
+            (*__count)--;
+            if((*__count) <= 0)
+            {
+                __count = core::memory::deallocate<int64>(__count);
+                if(__value != nullptr)
+                {
+                    if(__delete)
+                    {
+                        __value = __delete(__value);
+                    }
+                    else
+                    {
+                        delete __value;
+                        __value = nullptr;
+                    }
+                }
+            }
+        }
+    }
+
+    template <typename T> int64 pointer<T>::count() const { return __count != nullptr ? *__count : 0; }
+
+    template <typename T>
+    T * pointer<T>::operator->()
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return __value;
+    }
+
+    template <typename T>
+    const T * pointer<T>::operator->() const
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return __value;
+    }
+
+    template <typename T>
+    T & pointer<T>::operator*()
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return *__value;
+    }
+
+    template <typename T>
+    const T & pointer<T>::operator*() const
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return *__value;
+    }
+
+    template <typename T>
+    T * pointer<T>::p()
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return __value;
+    }
+
+    template <typename T>
+    const T * pointer<T>::p() const
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return __value;
+    }
+
+    template <typename T>
+    T & pointer<T>::v()
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return *__value;
+    }
+
+    template <typename T>
+    const T & pointer<T>::v() const
+    {
+        if(__value == nullptr)
+        {
+            throw exception();
+        }
+        return *__value;
+    }
+}
+
+#endif // __NOVEMBERIZING__POINTER__HP__

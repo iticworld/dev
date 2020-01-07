@@ -1,0 +1,1 @@
+novemberizing.git.clone 이런 식으로 사용하고 싶다.

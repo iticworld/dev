@@ -1,0 +1,157 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 6.
+ */
+
+
+#ifndef   __NOVEMBERIZING__LINKED_LIST_NODE__HP__
+#define   __NOVEMBERIZING__LINKED_LIST_NODE__HP__
+
+#include <novemberizing/linked/list.hh>
+
+namespace novemberizing
+{
+    namespace linked
+    {
+        template <typename T>
+        list<T>::node::node() : __value(), __previous(nullptr), __next(nullptr)
+        {
+        }
+
+        template <typename T>
+        list<T>::node::node(const node & o) : __value(o.__value), __previous(o.__previous), __next(o.__next)
+        {
+        }
+
+        template <typename T>
+        list<T>::node::node(node && o) noexcept : __value(move(o.__value)), __previous(o.__previous), __next(o.__next)
+        {
+            o.__previous = nullptr;
+            o.__next = nullptr;
+        }
+
+        template <typename T>
+        list<T>::node::node(const T & o, node * previous, node * next) : __value(o), __previous(previous), __next(next)
+        {
+            if(__previous)
+            {
+                __previous->next(this);
+            }
+            if(__next)
+            {
+                __next->previous(this);
+            }
+        }
+
+        template <typename T>
+        list<T>::node::node(T && o, node * previous, node * next) : __value(move(o)), __previous(previous), __next(next)
+        {
+            if(__previous)
+            {
+                __previous->next(this);
+            }
+            if(__next)
+            {
+                __next->previous(this);
+            }
+        }
+
+        template <typename T>
+        list<T>::node::~node()
+        {
+            __previous = nullptr;
+            __next = nullptr;
+        }
+
+        template <typename T>
+        typename list<T>::node & list<T>::node::operator=(const node & o)
+        {
+            if(&o != this)
+            {
+                __value = o.__value;
+                __previous = o.__previous;
+                __next = o.__next;
+            }
+            return *this;
+        }
+
+        template <typename T>
+        typename list<T>::node & list<T>::node::operator=(node && o) noexcept
+        {
+            if(&o != this)
+            {
+                __value = move(o.__value);
+                __previous = o.__previous;
+                __next = o.__next;
+
+                o.__previous = nullptr;
+                o.__next = nullptr;
+            }
+            return *this;
+        }
+
+        template <typename T>
+        const T & list<T>::node::v() const
+        {
+            return __value;
+        }
+
+        template <typename T>
+        T & list<T>::node::v()
+        {
+            return __value;
+        }
+
+        template <typename T>
+        T * list<T>::node::p()
+        {
+            return &__value;
+        }
+
+        template <typename T>
+        const T * list<T>::node::p() const
+        {
+            return &__value;
+        }
+
+        template <typename T>
+        typename list<T>::node * list<T>::node::next()
+        {
+            return __next;
+        }
+
+        template <typename T>
+        typename list<T>::node * list<T>::node::previous()
+        {
+            return __previous;
+        }
+
+        template <typename T>
+        const typename list<T>::node * list<T>::node::next() const
+        {
+            return __next;
+        }
+
+        template <typename T>
+        const typename list<T>::node * list<T>::node::previous() const
+        {
+            return __previous;
+        }
+
+        template <typename T>
+        void list<T>::node::previous(node * p)
+        {
+            __previous = p;
+        }
+
+        template <typename T>
+        void list<T>::node::next(node * p)
+        {
+            __next = p;
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__LINKED_LIST_NODE__HP__

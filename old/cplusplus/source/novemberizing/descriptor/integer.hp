@@ -1,0 +1,62 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 28.
+ */
+
+#ifndef   __NOVEMBERIZING__DESCRIPTOR_INTEGER__HP__
+#define   __NOVEMBERIZING__DESCRIPTOR_INTEGER__HP__
+
+#include <novemberizing/descriptor.hh>
+
+namespace novemberizing
+{
+    template <> class descriptor<int>
+    {
+    protected:  static int32 close(const int & o);
+    protected:  static int * allocate(const int & o)
+                {
+                    return new int(o);
+                }
+    protected:  static int * release(int * o)
+                {
+                    if(o != nullptr)
+                    {
+                        descriptor<int>::close(*o);
+                        delete o;
+                    }
+                    return nullptr;
+                }
+    protected:  pointer<int> __v;
+    public:     descriptor<int> & operator=(const descriptor<int> & o)
+                {
+                    if(&o != this)
+                    {
+                        __v = o.__v;
+                    }
+                    return *this;
+                }
+    public:     descriptor<int> & operator=(descriptor<int> && o) noexcept
+                {
+                    if(&o != this)
+                    {
+                        __v = move(o.__v);
+                    }
+                    return *this;
+                }
+    public:     descriptor(const int & o) : __v(descriptor<int>::allocate(o), descriptor<int>::release){}
+    public:     descriptor(const int & o, function<int * (int *)> d) : __v(descriptor<int>::allocate(o), d){}
+    public:     descriptor() : __v() {}
+    public:     descriptor(const descriptor<int> & o) : __v(o.__v) {}
+    public:     descriptor(descriptor<int> && o) noexcept : __v(move(o.__v)) {}
+    public:     virtual ~descriptor(){}
+    };
+//    template <typename T>
+//    class descriptor
+//    {
+
+//    };
+}
+
+#endif // __NOVEMBERIZING__DESCRIPTOR_INTEGER__HP__

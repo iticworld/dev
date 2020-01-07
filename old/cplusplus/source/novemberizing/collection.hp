@@ -1,0 +1,52 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 5.
+ */
+
+#ifndef   __NOVEMBERIZING__COLLECTION__HP__
+#define   __NOVEMBERIZING__COLLECTION__HP__
+
+#include <novemberizing/collection.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    inline collection<T>::collection()
+    {
+
+    }
+
+    template <typename T>
+    inline collection<T>::collection(const collection<T> & o)
+    {
+
+    }
+
+    template <typename T>
+    inline collection<T>::collection(collection<T> && o) noexcept
+    {
+
+    }
+
+    template <typename T>
+    inline collection<T>::~collection()
+    {
+
+    }
+
+    template <typename T>
+    inline collection<T> & collection<T>::operator=(const collection<T> & o)
+    {
+        return *this;
+    }
+
+    template <typename T>
+    inline collection<T> & collection<T>::operator=(collection<T> && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__COLLECTION__HP__

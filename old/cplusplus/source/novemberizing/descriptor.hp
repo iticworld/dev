@@ -1,0 +1,90 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 28.
+ */
+
+#ifndef   __NOVEMBERIZING__DESCRIPTOR__HP__
+#define   __NOVEMBERIZING__DESCRIPTOR__HP__
+
+#include <novemberizing/descriptor.hh>
+
+
+namespace novemberizing
+{
+    template <typename T>
+    T * descriptor<T>::allocate(const T & o)
+    {
+        return new T(o);
+    }
+
+    template <typename T>
+    T * descriptor<T>::release(T * o)
+    {
+        if(o != nullptr)
+        {
+            delete o;
+        }
+        return nullptr;
+    }
+
+    template <typename T>
+    int32 descriptor<T>::close(const T & o)
+    {
+        throw exception();
+    }
+
+    template <typename T>
+    descriptor<T>::descriptor() : __v(nullptr)
+    {
+    }
+
+    template <typename T>
+    descriptor<T>::descriptor(const descriptor<T> & o) : __v(o.__v)
+    {
+    }
+
+    template <typename T>
+    descriptor<T>::descriptor(descriptor<T> && o) noexcept : __v(move(o.__v))
+    {
+    }
+
+    template <typename T>
+    descriptor<T>::descriptor(const T & o) : __v(descriptor<T>::allocate(o), descriptor<T>::release)
+    {
+    }
+
+    template <typename T>
+    descriptor<T>::descriptor(const T & o, function<T * (T *)> d) : __v(descriptor<T>::allocate(o), d)
+    {
+    }
+
+    template <typename T>
+    descriptor<T>::~descriptor()
+    {
+    }
+
+    template <typename T>
+    descriptor<T> & descriptor<T>::operator=(const descriptor<T> & o)
+    {
+        if(&o != this)
+        {
+            __v = o.__v;
+        }
+        return *this;
+    }
+
+    template <typename T>
+    descriptor<T> & descriptor<T>::operator=(descriptor<T> && o) noexcept
+    {
+        if(&o != this)
+        {
+            __v = move(o.__v);
+        }
+        return *this;
+    }
+}
+
+
+#endif // __NOVEMBERIZING__DESCRIPTOR__HP__

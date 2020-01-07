@@ -1,0 +1,18 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 4.
+ */
+
+#ifndef   __NOVEMBERIZING__FUNCTION__HP__
+#define   __NOVEMBERIZING__FUNCTION__HP__
+
+#include <functional>
+
+namespace novemberizing
+{
+     template <typename T> using function = std::function<T>;
+}
+
+#endif // __NOVEMBERIZING__FUNCTION__HP__

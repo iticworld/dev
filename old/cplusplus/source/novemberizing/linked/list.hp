@@ -1,0 +1,586 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 6.
+ */
+
+#ifndef   __NOVEMBERIZING__LINKED_LIST__HP__
+#define   __NOVEMBERIZING__LINKED_LIST__HP__
+
+#include <novemberizing/linked/list.hh>
+
+namespace novemberizing
+{
+    namespace linked
+    {
+        template <typename T>
+        list<T>::list()
+        {
+            __head = nullptr;
+            __tail = nullptr;
+            __size = 0;
+        }
+
+        template <typename T>
+        list<T>::list(const list<T> & o)
+        {
+            __head = nullptr;
+            __tail = nullptr;
+            __size = 0;
+            o.each([this](const T & v){
+                __add(v);
+            });
+        }
+
+        template <typename T>
+        list<T>::list(list<T> && o) noexcept
+        {
+            __head = o.__head;
+            __tail = o.__tail;
+            __size = o.__size;
+
+            o.__head = nullptr;
+            o.__tail = nullptr;
+            o.__size = 0;
+        }
+
+        template <typename T>
+        list<T>::~list()
+        {
+            __clear();
+        }
+
+        template <typename T>
+        list<T> & list<T>::operator=(const list<T> & o)
+        {
+            if(&o != this)
+            {
+                __clear();
+                o.each([this](const T & v){
+                    __add(v);
+                });
+            }
+            return *this;
+        }
+
+        template <typename T>
+        list<T> & list<T>::operator=(list<T> && o) noexcept
+        {
+            if(&o != this)
+            {
+                __clear();
+
+                __head = o.__head;
+                __tail = o.__tail;
+                __size = o.__size;
+
+                o.__head = nullptr;
+                o.__tail = nullptr;
+                o.__size = 0;
+            }
+            return *this;
+        }
+
+        template <typename T>
+        bool list<T>::__add(const T & o)
+        {
+            node * n = new node(o, __tail, __tail != nullptr ? __tail->next() : nullptr);
+            __tail = n;
+            if(__head == nullptr)
+            {
+                __head = n;
+            }
+            __size += 1;
+        }
+
+        template <typename T>
+        bool list<T>::__add(T && o)
+        {
+            node * n = new node(move(o), __tail, __tail != nullptr ? __tail->next() : nullptr);
+            __tail = n;
+            if(__head == nullptr)
+            {
+                __head = n;
+            }
+            __size += 1;
+        }
+
+        template <typename T>
+        typename list<T>::node * list<T>::__find(const T & o) const
+        {
+            node * n = __head;
+            while(n != nullptr)
+            {
+                if(n->v() == o)
+                {
+                    return n;
+                }
+                n = n->next();
+            }
+            return nullptr;
+        }
+
+        template <typename T>
+        typename list<T>::node * list<T>::__find(T && o) const
+        {
+            node * n = __head;
+            while(n != nullptr)
+            {
+                if(n->v() == o)
+                {
+                    return n;
+                }
+                n = n->next();
+            }
+            return nullptr;
+        }
+
+        template <typename T>
+        bool list<T>::__del(typename list<T>::node * n)
+        {
+            if(n != nullptr)
+            {
+                node * previous = n->previous();
+                node * next = n->next();
+                if(previous != nullptr)
+                {
+                    previous->next(next);
+                }
+                if(next != nullptr)
+                {
+                    next->previous(previous);
+                }
+                if(n == __head)
+                {
+                    __head = next;
+                }
+                if(n == __tail)
+                {
+                    __tail = previous;
+                }
+                __size -= 1;
+                delete n;
+            }
+        }
+
+        template <typename T>
+        void list<T>::__clear()
+        {
+            node * n = __head;
+            while(n != nullptr)
+            {
+                node * next = n->next();
+                delete n;
+                n = next;
+            }
+            __head = nullptr;
+            __tail = nullptr;
+            __size = 0;
+        }
+
+        template <typename T>
+        void list<T>::__clear(function<void (T &)> f)
+        {
+            if(f != nullptr)
+            {
+                node * n = __head;
+                while(n != nullptr)
+                {
+                    node * next = n->next();
+                    f(n->v());
+                    delete n;
+                    n = next;
+                }
+                __head = nullptr;
+                __tail = nullptr;
+                __size = 0;
+            }
+            else
+            {
+                __clear();
+            }
+        }
+
+        template <typename T>
+        uint64 list<T>::previous(uint64 i)
+        {
+            node * n = reinterpret_cast<node *>(i);
+            if(n != nullptr)
+            {
+                return reinterpret_cast<uint64>(n->previous());
+            }
+            else
+            {
+                return reinterpret_cast<uint64>(__tail);
+            }
+        }
+
+        template <typename T>
+        uint64 list<T>::next(uint64 i)
+        {
+            node * n = reinterpret_cast<node *>(i);
+            if(n != nullptr)
+            {
+                return reinterpret_cast<uint64>(n->next());
+            }
+            else
+            {
+                return reinterpret_cast<uint64>(__head);
+            }
+        }
+
+        template <typename T>
+        T & list<T>::reference(uint64 i)
+        {
+            node * n = reinterpret_cast<node *>(i);
+            if(n == nullptr)
+            {
+                throw exception();
+            }
+            return n->v();
+        }
+
+        template <typename T>
+        T * list<T>::pointer(uint64 i)
+        {
+            node * n = reinterpret_cast<node *>(i);
+            if(n == nullptr)
+            {
+                return nullptr;
+            }
+            else
+            {
+                n->p();
+            }
+        }
+
+        template <typename T>
+        iterator<T> list<T>::begin()
+        {
+            return iterator<T>::accessor::create(this, reinterpret_cast<uint64>(__head));
+        }
+
+        template <typename T>
+        iterator<T> list<T>::end()
+        {
+            return iterator<T>::accessor::create(this, reinterpret_cast<uint64>(nullptr));
+        }
+
+        template <typename T>
+        const iterator<T> list<T>::begin() const
+        {
+            return iterator<T>::accessor::create(this, reinterpret_cast<uint64>(__head));
+        }
+
+        template <typename T>
+        const iterator<T> list<T>::end() const
+        {
+            return iterator<T>::accessor::create(this, reinterpret_cast<uint64>(nullptr));
+        }
+
+        template <typename T>
+        uint64 list<T>::size() const
+        {
+            return __size;
+        }
+
+        template <typename T>
+        void list<T>::size(function<void (int64)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                f(__size);
+                container::unlock();
+            }
+        }
+
+        template <typename T>
+        bool list<T>::empty() const
+        {
+            return __size == 0;
+        }
+
+        template <typename T>
+        void list<T>::empty(function<void (bool)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                f(__size == 0);
+                container::unlock();
+            }
+        }
+
+        template <typename T>
+        void list<T>::clear()
+        {
+            container::lock();
+            __clear();
+            container::unlock();
+        }
+
+        template <typename T>
+        void list<T>::clear(function<void (T &)> f)
+        {
+            container::lock();
+            __clear(f);
+            container::unlock();
+        }
+
+        template <typename T>
+        bool list<T>::exist(const T & o) const
+        {
+            container::lock();
+            node * n = __find(o);
+            container::unlock();
+            return n != nullptr;
+        }
+
+        template <typename T>
+        void list<T>::exist(const T & o, function<void (bool)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                node * n = __find(o);
+                container::unlock();
+                f(n != nullptr);
+            }
+        }
+
+        template <typename T>
+        bool list<T>::exist(T && o) const
+        {
+            container::lock();
+            node * n = __find(move(o));
+            container::unlock();
+            return n != nullptr;
+        }
+
+        template <typename T>
+        void list<T>::exist(T && o, function<void (bool)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                node * n = __find(move(o));
+                container::unlock();
+                f(n != nullptr);
+            }
+        }
+
+        template <typename T>
+        bool list<T>::add(const T & o)
+        {
+            container::lock();
+            if(__size < container::max)
+            {
+                __add(o);
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        bool list<T>::add(T && o)
+        {
+            container::lock();
+            if(__size < container::max)
+            {
+                __add(move(o));
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        void list<T>::add(const T & o, function<void (bool)> f)
+        {
+            container::lock();
+            if(__size < container::max)
+            {
+                __add(o);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::add(T && o, function<void (bool)> f)
+        {
+            container::lock();
+            if(__size < container::max)
+            {
+                __add(move(o));
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        bool list<T>::del(const T & o)
+        {
+            container::lock();
+            node * n = __find(o);
+            if(n != nullptr)
+            {
+                __del(n);
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        bool list<T>::del(T && o)
+        {
+            container::lock();
+            node * n = __find(move(o));
+            if(n != nullptr)
+            {
+                __del(n);
+                container::unlock();
+                return true;
+            }
+            container::unlock();
+            return false;
+        }
+
+        template <typename T>
+        void list<T>::del(const T & o, function<void (bool)> f)
+        {
+            container::lock();
+            node * n = __find(o);
+            if(n != nullptr)
+            {
+                __del(n);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::del(T && o, function<void (bool)> f)
+        {
+            container::lock();
+            node * n = __find(move(o));
+            if(n != nullptr)
+            {
+                __del(n);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(true);
+                }
+                return;
+            }
+            container::unlock();
+            if(f != nullptr)
+            {
+                f(false);
+            }
+        }
+
+        template <typename T>
+        void list<T>::del(const T & o, function<void (T &)> f, function<void (const exception &)> e)
+        {
+            container::lock();
+            node * n = __find(o);
+            if(n != nullptr)
+            {
+                if(f != nullptr)
+                {
+                    f(n->v());
+                }
+                __del(n);
+                container::unlock();
+                return;
+            }
+            else
+            {
+                container::unlock();
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+        }
+
+        template <typename T>
+        void list<T>::del(T && o, function<void (T &)> f, function<void (const exception &)> e)
+        {
+            container::lock();
+            node * n = __find(move(o));
+            if(n != nullptr)
+            {
+                if(f != nullptr)
+                {
+                    f(n->v());
+                }
+                __del(n);
+                container::unlock();
+                return;
+            }
+            else
+            {
+                container::unlock();
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+        }
+
+        template <typename T>
+        void list<T>::each(function<void (const T &)> f) const
+        {
+            if(f != nullptr)
+            {
+                container::lock();
+                node * n = __head;
+                while(n != nullptr)
+                {
+                    f(n->v());
+                    n = n->next();
+                }
+                container::unlock();
+            }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__LINKED_LIST__HP__

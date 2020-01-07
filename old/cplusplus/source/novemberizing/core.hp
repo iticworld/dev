@@ -1,0 +1,15 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__CORE__HP__
+#define   __NOVEMBERIZING__CORE__HP__
+
+#include <novemberizing/core.hh>
+#include <novemberizing/move.hp>
+#include <novemberizing/capacity.hh>
+
+#endif // __NOVEMBERIZING__CORE__HP__

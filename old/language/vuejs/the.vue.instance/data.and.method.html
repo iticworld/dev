@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DATA AND METHOD</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="first">
+    <p>{{ foo }}</p>
+    <button v-on:click="foo = 'baz'">Change It</button>
+</div>
+<script>
+    var obj = {
+        foo: 'bar'
+    };
+    Object.freeze(obj);
+    new Vue({
+        el: '#first',
+        data: obj
+    });
+</script>
+</body>
+</html>

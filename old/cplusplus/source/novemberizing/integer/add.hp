@@ -1,0 +1,32 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 7. 10.
+ */
+
+#ifndef   __NOVEMBERIZING__INTEGER_ADD__HP__
+#define   __NOVEMBERIZING__INTEGER_ADD__HP__
+
+#include <novemberizing.hh>
+
+namespace novemberizing
+{
+//    integer & integer::add(int8 v){ return add((int64) v); }
+//    integer & integer::add(int16 v){ return add((int64) v); }
+//    integer & integer::add(int32 v){ return add((int64) v); }
+
+
+//    public:     integer & add(int8 v);
+//    public:     integer & add(int16 v);
+//    public:     integer & add(int32 v);
+//    public:     integer & add(int64 v);
+//    public:     integer & add(uint8 v);
+//    public:     integer & add(uint16 v);
+//    public:     integer & add(uint32 v);
+//    public:     integer & add(uint64 v);
+//    public:     integer & add(const integer & v);
+//    public:     integer & add(integer && v);
+}
+
+#endif // __NOVEMBERIZING__INTEGER_ADD__HP__

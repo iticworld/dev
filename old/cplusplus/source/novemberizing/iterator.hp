@@ -1,0 +1,131 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 6.
+ */
+
+#ifndef   __NOVEMBERIZING__ITERATOR__HP__
+#define   __NOVEMBERIZING__ITERATOR__HP__
+
+#include <novemberizing/iterator.hh>
+
+namespace novemberizing
+{
+    template <typename T>
+    iterator<T>::iterator() : __container(nullptr), __index(0)
+    {
+    }
+
+    template <typename T>
+    iterator<T>::iterator(const iterator<T> & o) : __container(o.__container), __index(o.__index)
+    {
+    }
+
+    template <typename T>
+    iterator<T>::iterator(iterator<T> && o) noexcept : __container(o.__container), __index(o.__index)
+    {
+        o.__container = nullptr;
+        o.__index = 0;
+    }
+
+    template <typename T>
+    iterator<T>::~iterator()
+    {
+        __container = nullptr;
+        __index = 0;
+    }
+
+    template <typename T>
+    iterator<T> & iterator<T>::operator=(const iterator<T> & o)
+    {
+        if(&o != this)
+        {
+            __container = o.__container;
+            __index = o.__index;
+        }
+        return *this;
+    }
+
+    template <typename T>
+    iterator<T> & iterator<T>::operator=(iterator<T> && o) noexcept
+    {
+        if(&o != this)
+        {
+            __container = o.__container;
+            __index = o.__index;
+
+            o.__container = nullptr;
+            o.__index = 0;
+        }
+        return *this;
+    }
+
+    template <typename T>
+    iterator<T> iterator<T>::operator--(int)
+    {
+        uint64 i = __index;
+        __index = container::base<T>::accessor::previous(__container, __index);
+        return iterator<T>(__container, i);
+    }
+
+    template <typename T>
+    iterator<T> iterator<T>::operator++(int)
+    {
+        uint64 i = __index;
+        __index = container::base<T>::accessor::next(__container, __index);
+        return iterator<T>(__container, i);
+    }
+
+    template <typename T>
+    iterator<T> & iterator<T>::operator--()
+    {
+        __index = container::base<T>::accessor::previous(__container, __index);
+        return *this;
+    }
+
+    template <typename T>
+    iterator<T> & iterator<T>::operator++()
+    {
+        __index = container::base<T>::accessor::next(__container, __index);
+        return *this;
+    }
+
+    template <typename T>
+    T & iterator<T>::operator*()
+    {
+        return container::base<T>::accessor::reference(__container, __index);
+    }
+
+    template <typename T>
+    const T & iterator<T>::operator*() const
+    {
+        return container::base<T>::accessor::reference(__container, __index);
+    }
+
+    template <typename T>
+    T * iterator<T>::operator->()
+    {
+        return container::base<T>::accessor::pointer(__container, __index);
+    }
+
+    template <typename T>
+    const T * iterator<T>::operator->() const
+    {
+        return container::base<T>::accessor::pointer(__container, __index);
+    }
+
+    template <typename T>
+    bool iterator<T>::operator==(const iterator<T> & o) const
+    {
+        return __container == o.__container && __index == o.__index;
+    }
+
+    template <typename T>
+    bool iterator<T>::operator!=(const iterator<T> & o) const
+    {
+        return __container != o.__container || __index != o.__index;
+    }
+}
+
+#endif // __NOVEMBERIZING__ITERATOR__HP__

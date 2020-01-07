@@ -1,0 +1,8 @@
+# 1 BYTE PLUS
+
+```
+ADD(X: UINT8, Y: UINT8)
+INT16 _X = X
+INT16 _Y = Y
+RETURN _X + _Y
+```

@@ -1,0 +1,152 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__BINARY_SEARCH_TREE_NODE__HP__
+#define   __NOVEMBERIZING__BINARY_SEARCH_TREE_NODE__HP__
+
+#include <novemberizing/binary/search/tree.hh>
+
+namespace novemberizing
+{
+    namespace binary
+    {
+        namespace search
+        {
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node() : tuple(), __parent(nullptr), __left(nullptr), __right(nullptr)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(const node & o) : tuple(o.tuple), __parent(o.__parent), __left(o.__left), __right(o.__right)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(node && o) noexcept : tuple(move(o.tuple)), __parent(o.__parent), __left(o.__left), __right(o.__right)
+            {
+                o.__parent = nullptr;
+                o.__left = nullptr;
+                o.__right = nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(const TUPLE & v) : tuple(v), __parent(nullptr), __left(nullptr), __right(nullptr)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(TUPLE && v) : tuple(move(v)), __parent(nullptr), __left(nullptr), __right(nullptr)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(const TUPLE & v, node * parent) : tuple(v), __parent(parent), __left(nullptr), __right(nullptr)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::node(TUPLE && v, node * parent) : tuple(move(v)), __parent(parent), __left(nullptr), __right(nullptr)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::node::~node()
+            {
+                __parent = nullptr;
+                __left = nullptr;
+                __right = nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node & tree<T, TUPLE>::node::operator=(const node & o)
+            {
+                if(&o != this)
+                {
+                    tuple = o.tuple;
+                    __parent = o.__parent;
+                    __left = o.__left;
+                    __right = o.__right;
+                }
+                return *this;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node & tree<T, TUPLE>::node::operator=(node && o) noexcept
+            {
+                if(&o != this)
+                {
+                    tuple = move(o.tuple);
+                    __parent = o.__parent;
+                    __left = o.__left;
+                    __right = o.__right;
+
+                    o.__parent = nullptr;
+                    o.__left = nullptr;
+                    o.__right = nullptr;
+                }
+                return *this;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::parent()
+            {
+                return __parent;
+            }
+
+            template <typename T, typename TUPLE>
+            const typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::parent() const
+            {
+                return __parent;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::node::parent(node * n)
+            {
+                __parent = n;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::left()
+            {
+                return __left;
+            }
+
+            template <typename T, typename TUPLE>
+            const typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::left() const
+            {
+                return __left;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::node::left(node * n)
+            {
+                __left = n;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::right()
+            {
+                return __right;
+            }
+
+            template <typename T, typename TUPLE>
+            const typename tree<T, TUPLE>::node * tree<T, TUPLE>::node::right() const
+            {
+                return __right;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::node::right(node * n)
+            {
+                __right = n;
+            }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__BINARY_SEARCH_TREE_NODE__HP__

@@ -1,0 +1,14 @@
+{
+  "site": {
+    "name": "novemberizing",
+    "description": "the third chapter of novemberizing",
+    "summary": "novemberizing site summary",
+    "url": "https://novemberizing.github.io/"
+  },
+  "author": {
+    "name": "novemberizing",
+    "email": "novemberizing@gmail.com",
+    "homepage": "https://novemberizing.github.io/",
+    "bio": "novemberizing"
+  }
+}

@@ -1,0 +1,91 @@
+/**
+ *
+ * @author      novemberizing <developer@novemberizing.net>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__SINGLE__HP__
+#define   __NOVEMBERIZING__SINGLE__HP__
+
+namespace novemberizing
+{
+    namespace tuple
+    {
+        template <typename A>
+        single<A>::single(const A & first) : first(first)
+        {
+        }
+
+        template <typename A>
+        single<A>::single(A && first) : first(move(first))
+        {
+        }
+
+        template <typename A>
+        single<A>::single() : first()
+        {
+        }
+
+        template <typename A>
+        single<A>::single(const single<A> & o) : first(o.first)
+        {
+        }
+
+        template <typename A>
+        single<A>::single(single<A> && o) noexcept : first(move(o.first))
+        {
+        }
+
+        template <typename A>
+        single<A>::~single()
+        {
+        }
+
+        template <typename A>
+        single<A> & single<A>::operator=(const single<A> & o)
+        {
+            if(&o != this)
+            {
+                first = o.first;
+            }
+            return *this;
+        }
+
+        template <typename A>
+        single<A> & single<A>::operator=(single<A> && o) noexcept
+        {
+            if(&o != this)
+            {
+                first = move(o.first);
+            }
+            return *this;
+        }
+
+        template <typename A>
+        bool single<A>::operator==(const single<A> & o) const
+        {
+            return first == o.first;
+        }
+
+        template <typename A>
+        bool single<A>::operator==(single<A> && o) const
+        {
+            return first == o.first;
+        }
+
+        template <typename A>
+        bool single<A>::operator!=(const single<A> & o) const
+        {
+            return first = o.first;
+        }
+
+        template <typename A>
+        bool single<A>::operator!=(single<A> && o) const
+        {
+            return first = o.first;
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__SINGLE__HP__

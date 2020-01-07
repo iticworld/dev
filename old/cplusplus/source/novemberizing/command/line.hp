@@ -1,0 +1,49 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__COMMAND_LINE__HP__
+#define   __NOVEMBERIZING__COMMAND_LINE__HP__
+
+#include <novemberizing/command/line.hh>
+
+namespace novemberizing
+{
+    namespace command
+    {
+        inline line::~line()
+        {
+
+        }
+
+        inline line::line()
+        {
+
+        }
+
+        inline line::line(const line & o)
+        {
+
+        }
+
+        inline line::line(line && o) noexcept
+        {
+
+        }
+
+        inline line & line::operator=(const line & o)
+        {
+            return *this;
+        }
+
+        inline line & line::operator=(line && o) noexcept
+        {
+            return *this;
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__COMMAND_LINE__HP__

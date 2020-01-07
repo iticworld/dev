@@ -1,0 +1,46 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__INPUT__HP__
+#define   __NOVEMBERIZING__INPUT__HP__
+
+#include <novemberizing/input.hh>
+
+namespace novemberizing
+{
+    inline input::~input()
+    {
+
+    }
+
+    inline input::input()
+    {
+
+    }
+
+    inline input::input(const input & o)
+    {
+
+    }
+
+    inline input::input(input && o) noexcept
+    {
+
+    }
+
+    inline input & input::operator=(const input & o)
+    {
+        return *this;
+    }
+
+    inline input & input::operator=(input && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__INPUT__HP__

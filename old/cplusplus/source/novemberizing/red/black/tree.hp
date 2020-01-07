@@ -1,0 +1,1055 @@
+/**
+ *
+ * @author      novemberizing <developer@novemberizing.net>
+ * @since       0.0.1
+ * @date        2018. 6. 7.
+ */
+
+#ifndef   __NOVEMBERIZING__RED_BLACK_TREE__HP__
+#define   __NOVEMBERIZING__RED_BLACK_TREE__HP__
+
+#include <novemberizing/red/black/tree.hh>
+
+#include <novemberizing/linked/list.hh>
+#include <novemberizing/array/list.hh>
+
+namespace novemberizing
+{
+    namespace red
+    {
+        namespace black
+        {
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::color tree<T, TUPLE>::__color(node * n)
+            {
+                return n != nullptr ? n->c() : black;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::color tree<T, TUPLE>::__color(node * n, color c)
+            {
+                if(n != nullptr)
+                {
+                    n->c(c);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            const TUPLE & tree<T, TUPLE>::__tuple(node * n)
+            {
+                if(n == nullptr)
+                {
+                    throw exception();
+                }
+                return n->tuple;
+            }
+
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::node * tree<T, TUPLE>::__parent(node * n) { return n != nullptr ? n->parent() : nullptr; }
+
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::__parent(node * n, node * x)
+            {
+                if(n)
+                {
+                    n->parent(x);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__sibling(node * n)
+            {
+                return (n != nullptr && n->parent() != nullptr) ? __left(n->parent())==n ? __right(n->parent()) : __left(n->parent()) : nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__minimum(node * n)
+            {
+                if(n == nullptr)
+                {
+                    return nullptr;
+                }
+                while(n->left())
+                {
+                    n = n->left();
+                }
+                return n;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__maximum(node * n)
+            {
+                if(n == nullptr)
+                {
+                    return nullptr;
+                }
+                while(n->right())
+                {
+                    n = n->right();
+                }
+                return n;
+            }
+
+            template <typename T, typename TUPLE>
+            uint64 tree<T, TUPLE>::__depth(node * n)
+            {
+                if(n == nullptr)
+                {
+                    return 0;
+                }
+                uint64 v = 0;
+                while(n->parent())
+                {
+                    n = n->parent();
+                    v++;
+                }
+                return v;
+            }
+
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::node * tree<T, TUPLE>::__left(node * n) { return n != nullptr ? n->left() : nullptr; }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::__left(node * n, node * x)
+            {
+                if(n != nullptr)
+                {
+                    n->left(x);
+                }
+            }
+
+            template <typename T, typename TUPLE> typename tree<T, TUPLE>::node * tree<T, TUPLE>::__right(node * n) { return n != nullptr ? n->right() : nullptr; }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::__right(node * n, node * x)
+            {
+                if(n != nullptr)
+                {
+                    n->right(x);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::~tree()
+            {
+                __clear();
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::tree() : __root(nullptr), __size(0)
+            {
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::tree(const tree<T, TUPLE> & o) : __root(nullptr), __size(0)
+            {
+                __copy(o);
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE>::tree(tree<T, TUPLE> && o) noexcept : __root(o.__root), __size(o.__size)
+            {
+                o.__root = nullptr;
+                o.__size = 0;
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE> & tree<T, TUPLE>::operator=(const tree<T, TUPLE> & o)
+            {
+                if(&o != this)
+                {
+                    container::lock();
+                    __clear();
+                    __copy(o);
+                    container::unlock();
+                }
+                return *this;
+            }
+
+            template <typename T, typename TUPLE>
+            tree<T, TUPLE> & tree<T, TUPLE>::operator=(tree<T, TUPLE> && o) noexcept
+            {
+                if(&o != this)
+                {
+                    container::lock();
+                    __clear();
+                    __root = o.__root;
+                    __size = o.__size;
+                    o.__root = nullptr;
+                    o.__size = 0;
+                    container::unlock();
+                }
+                return *this;
+            }
+
+            template <typename T, typename TUPLE> iterator<TUPLE> tree<T, TUPLE>::begin() { return iterator<TUPLE>::accessor::create(this, reinterpret_cast<uint64>(__root)); }
+            template <typename T, typename TUPLE> iterator<TUPLE> tree<T, TUPLE>::end() { return iterator<TUPLE>::accessor::create(this, 0); }
+
+            template <typename T, typename TUPLE> const iterator<TUPLE> tree<T, TUPLE>::begin() const { return iterator<TUPLE>::accessor::create(this, reinterpret_cast<uint64>(__root)); }
+            template <typename T, typename TUPLE> const iterator<TUPLE> tree<T, TUPLE>::end() const { return iterator<TUPLE>::accessor::create(this, 0); }
+
+            template <typename T, typename TUPLE> bool tree<T, TUPLE>::empty() const { return __size == 0; }
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::empty(function<void (bool)> f) const
+            {
+                if(f != nullptr)
+                {
+                    f(__size == 0);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::clear()
+            {
+                container::lock();
+                __clear();
+                container::unlock();
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::clear(function<void (TUPLE &)> f)
+            {
+                container::lock();
+                __clear(f);
+                container::unlock();
+            }
+
+            template <typename T, typename TUPLE> uint64 tree<T, TUPLE>::size() const { return __size; }
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::size(function<void (int64)> f) const
+            {
+                if(f != nullptr)
+                {
+                    f(__size);
+                }
+            }
+
+            template <typename T, typename TUPLE> void tree<T, TUPLE>::each(function<void (const TUPLE &)> f) const
+            {
+                if(f != nullptr)
+                {
+                    node * n = __minimum(__root);
+                    while(n != nullptr)
+                    {
+                        f(n->tuple);
+                        n = __next(n);
+                    }
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::del(const T & o)
+            {
+                container::lock();
+                node * n = __del(o);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    return true;
+                }
+                return false;
+            }
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::del(T && o)
+            {
+                container::lock();
+                node * n = __del(o);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    return true;
+                }
+                return false;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(const T & o, function<void (bool)> f)
+            {
+                container::lock();
+                node * n = __del(o);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(true);
+                    }
+                    return;
+                }
+                if(f != nullptr)
+                {
+                    f(false);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(T && o, function<void (bool)> f)
+            {
+                container::lock();
+                node * n = __del(o);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(true);
+                    }
+                    return;
+                }
+                if(f != nullptr)
+                {
+                    f(false);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(const T & o, function<void (TUPLE &)> f, function<void (const exception &)> e)
+            {
+                container::lock();
+                node * n = __del(o);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(n->tuple);
+                    }
+                    return;
+                }
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(T && o, function<void (TUPLE &)> f, function<void (const exception &)> e)
+            {
+                container::lock();
+                node * n = __del(o);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(n->tuple);
+                    }
+                    return;
+                }
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+
+            /////////////
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::del(const TUPLE & o)
+            {
+                container::lock();
+                node * n = __del(o.first);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    return true;
+                }
+                return false;
+            }
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::del(TUPLE && o)
+            {
+                container::lock();
+                node * n = __del(o.first);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    return true;
+                }
+                return false;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(const TUPLE & o, function<void (bool)> f)
+            {
+                container::lock();
+                node * n = __del(o.first);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(true);
+                    }
+                    return;
+                }
+                if(f != nullptr)
+                {
+                    f(false);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(TUPLE && o, function<void (bool)> f)
+            {
+                container::lock();
+                node * n = __del(o.first);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(true);
+                    }
+                    return;
+                }
+                if(f != nullptr)
+                {
+                    f(false);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(const TUPLE & o, function<void (TUPLE &)> f, function<void (const exception &)> e)
+            {
+                container::lock();
+                node * n = __del(o.first);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(n->tuple);
+                    }
+                    return;
+                }
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::del(TUPLE && o, function<void (TUPLE &)> f, function<void (const exception &)> e)
+            {
+                container::lock();
+                node * n = __del(o.first);
+                container::unlock();
+                if(n != nullptr)
+                {
+                    __size -= 1;
+                    delete n;
+                    if(f != nullptr)
+                    {
+                        f(n->tuple);
+                    }
+                    return;
+                }
+                if(e != nullptr)
+                {
+                    e(exception());
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::add(const TUPLE & o)
+            {
+                container::lock();
+                node * n = __add(o);
+                container::unlock();
+                return n != nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::add(TUPLE && o)
+            {
+                container::lock();
+                node * n = __add(move(o));
+                container::unlock();
+                return n != nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::add(const TUPLE & o, function<void (bool)> f)
+            {
+                container::lock();
+                node * n = __add(o);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(n != nullptr);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::add(TUPLE && o, function<void (bool)> f)
+            {
+                container::lock();
+                node * n = __add(move(o));
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(n != nullptr);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::exist(const TUPLE & o) const
+            {
+                container::lock();
+                node * n = __search(o.first);
+                container::unlock();
+                return n != nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            bool tree<T, TUPLE>::exist(TUPLE && o) const
+            {
+                container::lock();
+                node * n = __search(o.first);
+                container::unlock();
+                return n != nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::exist(const TUPLE & o, function<void (bool)> f) const
+            {
+                container::lock();
+                node * n = __search(o.first);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(n != nullptr);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::exist(TUPLE && o, function<void (bool)> f) const
+            {
+                container::lock();
+                node * n = __search(o.first);
+                container::unlock();
+                if(f != nullptr)
+                {
+                    f(n != nullptr);
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            uint64 tree<T, TUPLE>::previous(uint64 i)
+            {
+                return reinterpret_cast<uint64>(__previous(reinterpret_cast<node *>(i)));
+            }
+
+            template <typename T, typename TUPLE>
+            uint64 tree<T, TUPLE>::next(uint64 i)
+            {
+                return reinterpret_cast<uint64>(__next(reinterpret_cast<node *>(i)));
+            }
+
+            template <typename T, typename TUPLE>
+            TUPLE & tree<T, TUPLE>::reference(uint64 i)
+            {
+                node * n = reinterpret_cast<node *>(i);
+                if(n == nullptr)
+                {
+                    throw exception();
+                }
+                return n->tuple;
+            }
+
+            template <typename T, typename TUPLE>
+            TUPLE * tree<T, TUPLE>::pointer(uint64 i)
+            {
+                node * n = reinterpret_cast<node *>(i);
+                if(n == nullptr)
+                {
+                    throw exception();
+                }
+                return &(n->tuple);
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__next(node * n) const
+            {
+                if(n != nullptr)
+                {
+                    if(n->right())
+                    {
+                        return __minimum(n->right());
+                    }
+                    while(n)
+                    {
+                        if(__left(n->parent()) == n)
+                        {
+                            return n->parent();
+                        }
+                        n = n->parent();
+                    }
+                    return nullptr;
+                }
+                return __minimum(__root);
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__previous(node * n) const
+            {
+                if(n != nullptr)
+                {
+                    if(n->left())
+                    {
+                        return __maximum(n->left());
+                    }
+                    while(n)
+                    {
+                        if(__right(n->parent()) == n)
+                        {
+                            return n->parent();
+                        }
+                        n = n->parent();
+                    }
+                    return nullptr;
+                }
+                return __maximum(__root);
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__add(const TUPLE & o)
+            {
+                if(__root == nullptr)
+                {
+                    __size += 1;
+                    return __root = new node(o, nullptr, black);
+                }
+                node * current = __root;
+                while(current != nullptr)
+                {
+                    if(current->tuple.first == o.first)
+                    {
+                        current->tuple = o;
+                        return current;
+                    }
+                    if(current->tuple.first < o.first)
+                    {
+                        if(current->right() == nullptr)
+                        {
+                            __size += 1;
+                            node * n = new node(o, current, red);
+                            current->right(n);
+                            if(__color(current) == red)
+                            {
+                                fix::insertion(this, n);
+                                __root->c(black);
+                            }
+                            return n;
+                        }
+                        current = current->right();
+                    }
+                    else
+                    {
+                        if(current->left() == nullptr)
+                        {
+                            __size += 1;
+                            node * n = new node(o, current, red);
+                            current->left(n);
+                            if(__color(current) == red)
+                            {
+                                fix::insertion(this, n);
+                                __root->c(black);
+                            }
+                            return n;
+                        }
+                        current = current->left();
+                    }
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__add(TUPLE && o)
+            {
+                if(__root == nullptr)
+                {
+                    __size += 1;
+                    return __root = new node(move(o), nullptr, black);
+                }
+                node * current = __root;
+                while(current != nullptr)
+                {
+                    if(current->tuple.first == o.first)
+                    {
+                        current->tuple = move(o);
+                        return current;
+                    }
+                    if(current->tuple.first < o.first)
+                    {
+                        if(current->right() == nullptr)
+                        {
+                            __size += 1;
+                            node * n = new node(move(o), current, red);
+                            current->right(n);
+                            if(__color(current) == red)
+                            {
+                                fix::insertion(this, n);
+                                __root->c(black);
+                            }
+                            return n;
+                        }
+                        current = current->right();
+                    }
+                    else
+                    {
+                        if(current->left() == nullptr)
+                        {
+                            __size += 1;
+                            node * n = new node(move(o), current, red);
+                            current->left(n);
+                            if(__color(current) == red)
+                            {
+                                fix::insertion(this, n);
+                                __root->c(black);
+                            }
+                            return n;
+                        }
+                        current = current->left();
+                    }
+                }
+            }
+
+
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::__copy(const tree<T, TUPLE> & o)
+            {
+                __clear();
+                node * y = __root = new node(o.__root->tuple);
+                node * x = o.__root;
+                do
+                {
+                    if(x->left() && y->left() == nullptr)
+                    {
+                        __size += 1;
+                        y->left(new node(x->tuple, y));
+                        x = x->left();
+                        y = y->left();
+                    }
+                    else if(x->right() && y->right() == nullptr)
+                    {
+                        __size += 1;
+                        y->right(new node(x->tuple, y));
+                        x = x->right();
+                        y = y->right();
+                    }
+                    else
+                    {
+                        x = x->parent();
+                        y = y->parent();
+                    }
+                } while(x != o.__root || (x == o.__root && x->right() != nullptr && y->right() == nullptr));
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__search(const T & o) const
+            {
+                node * n = __root;
+                while(n != nullptr)
+                {
+                    if(n->tuple.first == o)
+                    {
+                        return n;
+                    }
+                    if(n->tuple.first < o)
+                    {
+                        n = n->right();
+                    }
+                    else
+                    {
+                        n = n->left();
+                    }
+                }
+                return nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__search(T && o) const
+            {
+                node * n = __root;
+                while(n != nullptr)
+                {
+                    if(n->tuple.first == o)
+                    {
+                        return n;
+                    }
+                    if(n->tuple.first < o)
+                    {
+                        n = n->right();
+                    }
+                    else
+                    {
+                        n = n->left();
+                    }
+                }
+                return nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::__clear()
+            {
+                node * n = __root;
+                while(n != nullptr)
+                {
+                    if(n->left())
+                    {
+                        n = n->left();
+                    }
+                    else if(n->right())
+                    {
+                        n = n->right();
+                    }
+                    else
+                    {
+                        node * current = n;
+                        n = n->parent();
+                        __change(current, nullptr);
+                        delete current;
+                    }
+                }
+                __size = 0;
+                __root = nullptr;
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::__clear(function<void (TUPLE &)> f)
+            {
+                if(f != nullptr)
+                {
+                    node * n = __root;
+                    while(n != nullptr)
+                    {
+                        if(n->left())
+                        {
+                            n = n->left();
+                        }
+                        else if(n->right())
+                        {
+                            n = n->right();
+                        }
+                        else
+                        {
+                            node * current = n;
+                            n = n->parent();
+                            __change(current, nullptr);
+                            f(current->tuple);
+                            delete current;
+                        }
+                    }
+                    __size = 0;
+                    __root = nullptr;
+                }
+                else
+                {
+                    __clear();
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            void tree<T, TUPLE>::__change(node * n, node * x)
+            {
+                if(n->parent())
+                {
+                    if(__left(n->parent()) == n)
+                    {
+                        __left(n->parent(), x);
+                    }
+                    else
+                    {
+                        __right(n->parent(), x);
+                    }
+                }
+                else
+                {
+                    __root = x;
+                }
+                if(x != nullptr)
+                {
+                    x->parent(n->parent());
+                }
+            }
+
+            template <typename T, typename TUPLE>
+            typename tree<T, TUPLE>::node * tree<T, TUPLE>::__del(const T & o)
+            {
+                node * n = __search(o);
+                if(n != nullptr)
+                {
+                    if(n->left() == nullptr)
+                    {
+                        node * right = n->right();
+                        __change(n, right);
+                        if(right==nullptr)
+                        {
+                            if(__color(n) == black)
+                            {
+                                fix::deletion(this, n->parent());
+                            }
+                        }
+                        else
+                        {
+                            /** if there is one child it must be red and node must be black. */
+                            right->c(black);
+                        }
+                    }
+                    else if(n->right() == nullptr)
+                    {
+                        node * left = n->left();
+                        __change(n, left);
+                        /** if there is one child it must be red and node must be black. */
+                        left->c(black);
+                    }
+                    else
+                    {
+                        node * successor = __minimum(n->right());
+                        color c = successor->c();
+                        node * parent = successor->parent();
+                        node * right = successor->right();
+
+                        __change(successor, right);
+                        __change(n, successor);
+                        successor->left(n->left());
+                        __parent(successor->left(), successor);
+                        successor->right(n->right());
+                        if(successor->right())
+                        {
+                            __parent(successor->right(), successor);
+                        }
+                        successor->c(n->c());
+
+                        if(right)
+                        {
+                            /** if there is one child it must be red and node must be black. */
+                            right->c(black);
+                        }
+                        else
+                        {
+                            if(c == black)
+                            {
+                                fix::deletion(this, parent != n ? parent : successor);
+                            }
+                        }
+                    }
+                }
+                return n;
+            }
+
+//            template <typename T, typename TUPLE>
+//            string tree<T, TUPLE>::json(function<string (const TUPLE &)> f)
+//            {
+//                string r = "[";
+//                string b = "[";
+//                uint64 depth = 0;
+//                if(__root != nullptr)
+//                {
+//                    node ** o = memory::allocate<node *>(1);
+//                    uint64 count = 1;
+//                    o[0] = __root;
+//                    while(count > 0)
+//                    {
+//                        count = 0;
+//                        depth += 1;
+//                        o = memory::allocate<node *>(o, 1UL << (depth + 1));
+//                        uint64 start = (1UL << (depth - 1)) - 1;
+//                        uint64 end = (1UL << depth) - 1;
+//                        for(uint64 i = start; i < end; i++)
+//                        {
+//                            if(o[i])
+//                            {
+//                                o[end + (i - start) * 2 + 0] = o[i]->left();
+//                                o[end + (i - start) * 2 + 1] = o[i]->right();
+//                                if(o[i]->left() || o[i]->right())
+//                                {
+//                                    count += 1;
+//                                }
+//                            }
+//                            else
+//                            {
+//                                o[end + (i - start) * 2 + 0] = nullptr;
+//                                o[end + (i - start) * 2 + 1] = nullptr;
+//                            }
+//                        }
+//                    }
+//                    for(uint64 i = 0; i < depth; i++)
+//                    {
+//                        uint64 step = (1UL << (depth - (i + 1)));
+//                        uint64 x = 0;
+//                        for(uint64 start = (1UL << i) - 1; start < ((1UL << i + 1) - 1); start++)
+//                        {
+//                            x += step;
+//                            if(o[start]!=nullptr)
+//                            {
+//                                if(__color(o[start]) == red)
+//                                {
+//                                    if(r.size()==1)
+//                                    {
+//                                        r += string::format("{\"x\":%ld,\"y\":%ld,\"v\":\"R(%s)\"}", x, depth - i, f(o[start]->tuple).v());
+//                                    }
+//                                    else
+//                                    {
+//                                        r += string::format(",{\"x\":%ld,\"y\":%ld,\"v\":\"R(%s)\"}", x, depth - i, f(o[start]->tuple).v());
+//                                    }
+//                                }
+//                                else
+//                                {
+//                                    if(b.size()==1)
+//                                    {
+//                                        b += string::format("{\"x\":%ld,\"y\":%ld,\"v\":\"B(%s)\"}", x, depth - i, f(o[start]->tuple).v());
+//                                    }
+//                                    else
+//                                    {
+//                                        b += string::format(",{\"x\":%ld,\"y\":%ld,\"v\":\"B(%s)\"}", x, depth - i, f(o[start]->tuple).v());
+//                                    }
+//                                }
+//                            }
+//                            x += step;
+//                        }
+//                    }
+//                    memory::deallocate<node *>(o);
+//                }
+//                r += "]";
+//                b += "]";
+//                return string::format("{\"r\":%s,\"b\":%s,\"horizontal\":%ld,\"vertical\":%ld}", r.v(), b.v(), 1 << depth, depth);
+//            }
+
+            template <typename T, typename TUPLE>
+            iterator<TUPLE> tree<T, TUPLE>::get(const T & k)
+            {
+                return iterator<TUPLE>::accessor::create(this, reinterpret_cast<uint64>(__search(k)));
+            }
+
+            template <typename T, typename TUPLE>
+            const iterator<TUPLE> tree<T, TUPLE>::get(const T & k) const
+            {
+                return iterator<TUPLE>::accessor::create(this, reinterpret_cast<uint64>(__search(k)));
+            }
+        }
+    }
+}
+
+#endif // __NOVEMBERIZING__RED_BLACK_TREE__HP__

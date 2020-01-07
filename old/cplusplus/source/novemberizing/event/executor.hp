@@ -1,0 +1,51 @@
+/**
+ *
+ * @author      novemberizing
+ * @since       0.0.1
+ * @date        2018. 7. 16.
+ */
+
+#ifndef   __NOVEMBERIZING__EVENT_EXECUTOR__HP__
+#define   __NOVEMBERIZING__EVENT_EXECUTOR__HP__
+
+#include <novemberizing/event.hh>
+
+namespace novemberizing
+{
+    inline event::executor::~executor()
+    {
+
+    }
+
+    inline event::executor::executor()
+    {
+
+    }
+
+    inline event::executor::executor(const executor & o)
+    {
+
+    }
+
+    inline event::executor::executor(executor && o) noexcept
+    {
+
+    }
+
+    inline event::executor & event::executor::operator=(const executor & o)
+    {
+        return *this;
+    }
+
+    inline event::executor & event::executor::operator=(executor && o) noexcept
+    {
+        return *this;
+    }
+
+    inline void event::executor::run()
+    {
+
+    }
+}
+
+#endif // __NOVEMBERIZING__EVENT_EXECUTOR__HP__

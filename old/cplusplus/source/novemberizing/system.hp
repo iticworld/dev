@@ -1,0 +1,41 @@
+/**
+ *
+ * @author      novemberizing <novemberizing@gmail.com>
+ * @since       0.0.1
+ * @date        2018. 6. 19.
+ */
+
+#ifndef   __NOVEMBERIZING__SYSTEM__HP__
+#define   __NOVEMBERIZING__SYSTEM__HP__
+
+#include <novemberizing/core.hh>
+
+namespace novemberizing
+{
+    inline system::system()
+    {
+
+    }
+    inline system::system(const novemberizing::system & o)
+    {
+
+    }
+    inline system::system(novemberizing::system && o) noexcept
+    {
+
+    }
+    inline system::~system()
+    {
+
+    }
+    inline novemberizing::system & system::operator=(const novemberizing::system & o)
+    {
+        return *this;
+    }
+    inline novemberizing::system & system::operator=(novemberizing::system && o) noexcept
+    {
+        return *this;
+    }
+}
+
+#endif // __NOVEMBERIZING__SYSTEM__HP__

@@ -4,12 +4,12 @@
 #include <stdio.h>
 #include <map>
 
-const double step = 0.1f;
+const double step = 0.2f;
 std::map<double, double> values;
 
 int f(int x)
 {
-  return x * 2.0f - 2.0f;
+  return x * 2.0f - 1.0f;
 }
 
 void calculate()
@@ -41,35 +41,9 @@ void display()
   //
   glLineWidth(1.0);
   //
-  glColor3f(0.0f, 0.0f, 0.0f);
-  glBegin(GL_LINES);
-    // X AXIS
-    glVertex2f( 0.0f, -0.9f);
-    glVertex2f( 0.0f,  0.9f);
-    // Y AXIS
-    glVertex2f(-0.9f,  0.0f);
-    glVertex2f( 0.9f,  0.0f);
-  glEnd();
-  glBegin (GL_TRIANGLES);
-    // X ARROW
-    glVertex2f(0.9f ,  0.0f);
-    glVertex2f(0.88f,  0.02f);
-    glVertex2f(0.88f, -0.02f);
-    // Y ARROW
-    glVertex2f( 0.0f,  0.9f);
-    glVertex2f( 0.02f, 0.88f);
-    glVertex2f(-0.02f, 0.88f);
-  glEnd();
-
-  glRasterPos2f(0.86f, -0.07f);
-  glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) "x");
-
-  glRasterPos2f(-0.055f, 0.86f);
-  glutBitmapString(GLUT_BITMAP_HELVETICA_18, (unsigned char *) "y");
-
-  glColor3f(1.0f, 0.0f, 0.0f);
-  glBegin (GL_LINE_LOOP);
-  for(std::map<double, double>::iterator it = values.begin(); it != values.end(); ++it)
+  glEnable(GL_LINE_SMOOTH);
+  glBegin(GL_LINE_STRIP);
+  for(std::map<double, double>::iterator it = results.begin(); it != results.end(); ++it)
   {
     glVertex2f(it->first, it->second);
   }

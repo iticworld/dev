@@ -1,0 +1,3 @@
+/home/novemberizing/Workspace/iticworld/dev/math/build/CMakeFiles/rebuild_cache.dir
+/home/novemberizing/Workspace/iticworld/dev/math/build/CMakeFiles/point.dir
+/home/novemberizing/Workspace/iticworld/dev/math/build/CMakeFiles/edit_cache.dir

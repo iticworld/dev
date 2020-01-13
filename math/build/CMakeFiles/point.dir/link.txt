@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/point.dir/src/discomplexity/point.cc.o CMakeFiles/point.dir/src/discomplexity.cc.o  -o point 

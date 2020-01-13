@@ -14,6 +14,7 @@ namespace discomplexity
   {
   protected:  T *     value_;
   protected:  uint64  length_;
+  public:     inline bool empty() const { return this->value_ == nullptr || this->length_ == 0; }
   public:     inline uint64 size() const { return this->length_; }
   public:     inline const T & at(uint64 i) const
               {
@@ -120,6 +121,21 @@ namespace discomplexity
                 this->length_ = 0;
               }
   };
+
+  // template <typename T> array<T> operator-(const array<T> & x, const array<T> & y)
+  // {
+  //   if(x.size() != y.size())
+  //   {
+  //     throw std::exception();
+  //   }
+  //   if(x.empty() || y.empty())
+  //   {
+  //     throw std::exception();
+  //   }
+  //   array<T> out = x;
+  //
+  //   return out;
+  // }
 }
 
 #endif // __DISCOMPLEXITY__ARRAY__HH__

@@ -36,6 +36,10 @@ cstring
 exception
 -
 
+../src/discomplexity/point.hh
+discomplexity/array.hh
+-
+
 /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity.cc
 discomplexity.hh
 /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity.hh
@@ -44,11 +48,21 @@ discomplexity.hh
 discomplexity/debug.hh
 -
 
+/home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/point.hh
+discomplexity/array.hh
+-
+
 /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/vector.cc
+point.hh
+/home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/point.hh
 vector.hh
 /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/vector.hh
+iostream
+-
 
 /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/vector.hh
 discomplexity/array.hh
+-
+discomplexity/point.hh
 -
 

@@ -12,5 +12,5 @@ set(headers src/discomplexity.hh
             src/discompleixty/array.hh)
 
 # add_executable(array src/discomplexity/array.cc ${sources})
-# add_executable(vector src/discomplexity/vector.cc ${sources})
-add_executable(point src/discomplexity/point.cc ${sources})
+add_executable(vector src/discomplexity/vector.cc ${sources})
+# add_executable(point src/discomplexity/point.cc ${sources})

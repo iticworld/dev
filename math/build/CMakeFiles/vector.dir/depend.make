@@ -9,6 +9,8 @@ CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity.hh
 CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity/array.hh
 CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity/debug.hh
 CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity/memory.hh
+CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity/point.hh
+CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity/point.hh
 CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity/vector.cc
 CMakeFiles/vector.dir/src/discomplexity/vector.cc.o: ../src/discomplexity/vector.hh
 

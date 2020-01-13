@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named point
+# Target rules for targets named vector
 
 # Build rule for target.
-point: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 point
-.PHONY : point
+vector: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 vector
+.PHONY : vector
 
 # fast build rule for target.
-point/fast:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/build
-.PHONY : point/fast
+vector/fast:
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
+.PHONY : vector/fast
 
 src/discomplexity.o: src/discomplexity.cc.o
 
@@ -129,7 +129,7 @@ src/discomplexity.o: src/discomplexity.cc.o
 
 # target to build an object file
 src/discomplexity.cc.o:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/src/discomplexity.cc.o
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/src/discomplexity.cc.o
 .PHONY : src/discomplexity.cc.o
 
 src/discomplexity.i: src/discomplexity.cc.i
@@ -138,7 +138,7 @@ src/discomplexity.i: src/discomplexity.cc.i
 
 # target to preprocess a source file
 src/discomplexity.cc.i:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/src/discomplexity.cc.i
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/src/discomplexity.cc.i
 .PHONY : src/discomplexity.cc.i
 
 src/discomplexity.s: src/discomplexity.cc.s
@@ -147,35 +147,35 @@ src/discomplexity.s: src/discomplexity.cc.s
 
 # target to generate assembly for a file
 src/discomplexity.cc.s:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/src/discomplexity.cc.s
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/src/discomplexity.cc.s
 .PHONY : src/discomplexity.cc.s
 
-src/discomplexity/point.o: src/discomplexity/point.cc.o
+src/discomplexity/vector.o: src/discomplexity/vector.cc.o
 
-.PHONY : src/discomplexity/point.o
+.PHONY : src/discomplexity/vector.o
 
 # target to build an object file
-src/discomplexity/point.cc.o:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/src/discomplexity/point.cc.o
-.PHONY : src/discomplexity/point.cc.o
+src/discomplexity/vector.cc.o:
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/src/discomplexity/vector.cc.o
+.PHONY : src/discomplexity/vector.cc.o
 
-src/discomplexity/point.i: src/discomplexity/point.cc.i
+src/discomplexity/vector.i: src/discomplexity/vector.cc.i
 
-.PHONY : src/discomplexity/point.i
+.PHONY : src/discomplexity/vector.i
 
 # target to preprocess a source file
-src/discomplexity/point.cc.i:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/src/discomplexity/point.cc.i
-.PHONY : src/discomplexity/point.cc.i
+src/discomplexity/vector.cc.i:
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/src/discomplexity/vector.cc.i
+.PHONY : src/discomplexity/vector.cc.i
 
-src/discomplexity/point.s: src/discomplexity/point.cc.s
+src/discomplexity/vector.s: src/discomplexity/vector.cc.s
 
-.PHONY : src/discomplexity/point.s
+.PHONY : src/discomplexity/vector.s
 
 # target to generate assembly for a file
-src/discomplexity/point.cc.s:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/src/discomplexity/point.cc.s
-.PHONY : src/discomplexity/point.cc.s
+src/discomplexity/vector.cc.s:
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/src/discomplexity/vector.cc.s
+.PHONY : src/discomplexity/vector.cc.s
 
 # Help Target
 help:
@@ -184,14 +184,14 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... point"
+	@echo "... vector"
 	@echo "... edit_cache"
 	@echo "... src/discomplexity.o"
 	@echo "... src/discomplexity.i"
 	@echo "... src/discomplexity.s"
-	@echo "... src/discomplexity/point.o"
-	@echo "... src/discomplexity/point.i"
-	@echo "... src/discomplexity/point.s"
+	@echo "... src/discomplexity/vector.o"
+	@echo "... src/discomplexity/vector.i"
+	@echo "... src/discomplexity/vector.s"
 .PHONY : help
 
 

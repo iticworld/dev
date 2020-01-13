@@ -60,39 +60,39 @@ CMAKE_SOURCE_DIR = /home/novemberizing/Workspace/iticworld/dev/math
 CMAKE_BINARY_DIR = /home/novemberizing/Workspace/iticworld/dev/math/build
 
 #=============================================================================
-# Target rules for target CMakeFiles/point.dir
+# Target rules for target CMakeFiles/vector.dir
 
 # All Build rule for target.
-CMakeFiles/point.dir/all:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/depend
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/novemberizing/Workspace/iticworld/dev/math/build/CMakeFiles --progress-num=1,2,3 "Built target point"
-.PHONY : CMakeFiles/point.dir/all
+CMakeFiles/vector.dir/all:
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/depend
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/novemberizing/Workspace/iticworld/dev/math/build/CMakeFiles --progress-num=1,2,3 "Built target vector"
+.PHONY : CMakeFiles/vector.dir/all
 
 # Include target in all.
-all: CMakeFiles/point.dir/all
+all: CMakeFiles/vector.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/point.dir/rule: cmake_check_build_system
+CMakeFiles/vector.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/novemberizing/Workspace/iticworld/dev/math/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/point.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/vector.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/novemberizing/Workspace/iticworld/dev/math/build/CMakeFiles 0
-.PHONY : CMakeFiles/point.dir/rule
+.PHONY : CMakeFiles/vector.dir/rule
 
 # Convenience name for target.
-point: CMakeFiles/point.dir/rule
+vector: CMakeFiles/vector.dir/rule
 
-.PHONY : point
-
-# clean rule for target.
-CMakeFiles/point.dir/clean:
-	$(MAKE) -f CMakeFiles/point.dir/build.make CMakeFiles/point.dir/clean
-.PHONY : CMakeFiles/point.dir/clean
+.PHONY : vector
 
 # clean rule for target.
-clean: CMakeFiles/point.dir/clean
+CMakeFiles/vector.dir/clean:
+	$(MAKE) -f CMakeFiles/vector.dir/build.make CMakeFiles/vector.dir/clean
+.PHONY : CMakeFiles/vector.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/vector.dir/clean
 
 .PHONY : clean
 

@@ -10,5 +10,7 @@ CMakeFiles/vector.dir/src/discomplexity/vector.cc.o
  ../src/discomplexity/array.hh
  ../src/discomplexity/debug.hh
  ../src/discomplexity/memory.hh
+ ../src/discomplexity/point.hh
+ /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/point.hh
  /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/vector.cc
  /home/novemberizing/Workspace/iticworld/dev/math/src/discomplexity/vector.hh

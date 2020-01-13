@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../src/discomplexity.hh
+iostream
+-
+exception
+-
+
+../src/discomplexity/space.hh
+discomplexity.hh
+-
+iostream
+-
+
+/home/novemberizing/Workspace/iticworld/dev/discomplexity/src/discomplexity/reference.cc
+reference.hh
+/home/novemberizing/Workspace/iticworld/dev/discomplexity/src/discomplexity/reference.hh
+
+/home/novemberizing/Workspace/iticworld/dev/discomplexity/src/discomplexity/reference.hh
+discomplexity/space.hh
+-
+

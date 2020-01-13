@@ -11,6 +11,7 @@ namespace discomplexity
   typedef __UINT16_TYPE__   uint16;
   typedef __UINT32_TYPE__   uint32;
   typedef __UINT64_TYPE__   uint64;
+  typedef void (*destructor)(void *);
 }
 
 #include <discomplexity/debug.hh>

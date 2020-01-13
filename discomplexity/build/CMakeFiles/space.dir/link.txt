@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/space.dir/src/discomplexity/space.cc.o  -o space 

@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/array.dir/src/discomplexity/array.cc.o  -o array 

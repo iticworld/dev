@@ -122,20 +122,7 @@ namespace discomplexity
               }
   };
 
-  // template <typename T> array<T> operator-(const array<T> & x, const array<T> & y)
-  // {
-  //   if(x.size() != y.size())
-  //   {
-  //     throw std::exception();
-  //   }
-  //   if(x.empty() || y.empty())
-  //   {
-  //     throw std::exception();
-  //   }
-  //   array<T> out = x;
-  //
-  //   return out;
-  // }
+
 }
 
 #endif // __DISCOMPLEXITY__ARRAY__HH__

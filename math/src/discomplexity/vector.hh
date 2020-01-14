@@ -1,8 +1,7 @@
 #ifndef   __DISCOMPLEXITY__VECTOR__HH__
 #define   __DISCOMPLEXITY__VECTOR__HH__
 
-#include <discomplexity/array.hh>
-#include <discomplexity/point.hh>
+
 
 namespace discomplexity
 {

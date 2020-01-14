@@ -56,6 +56,24 @@ namespace discomplexity
     }
     return out;
   }
+
+  template <typename T> point<T> operator+(const point<T> & x, const point<T> & y)
+  {
+    if(x.size() != y.size())
+    {
+      throw std::exception();
+    }
+    if(x.empty() || y.empty())
+    {
+      throw std::exception();
+    }
+    point<T> out = x;
+    for(uint64 i = 0; i < out.size(); i++)
+    {
+      out[i] += y[i];
+    }
+    return out;
+  }
 }
 
 #endif // __DISCOMPLEXITY__POINT__HH__

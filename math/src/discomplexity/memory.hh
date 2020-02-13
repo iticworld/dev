@@ -31,7 +31,7 @@ namespace discomplexity
     inline T * dup(const T * p, uint64 len)
     {
       // IMPLEMENT THIS
-      throw std::exception();
+      THROW();
     }
 
     template <> inline int8   * dup(const int8 * p, uint64 len)

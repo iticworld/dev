@@ -20,11 +20,11 @@ namespace discomplexity
               {
                 if(this->length_ <= i)
                 {
-                  throw std::exception();
+                    THROW();
                 }
                 if(this->value_ == nullptr)
                 {
-                  throw std::exception();
+                    THROW();
                 }
                 return this->value_[i];
               }
@@ -32,11 +32,11 @@ namespace discomplexity
               {
                 if(this->length_ <= i)
                 {
-                  throw std::exception();
+                    THROW();
                 }
                 if(this->value_ == nullptr)
                 {
-                  throw std::exception();
+                    THROW();
                 }
                 return this->value_[i];
               }
@@ -44,11 +44,11 @@ namespace discomplexity
               {
                 if(this->length_ <= i)
                 {
-                  throw std::exception();
+                    THROW();
                 }
                 if(this->value_ == nullptr)
                 {
-                  throw std::exception();
+                    THROW();
                 }
                 return this->value_[i];
               }

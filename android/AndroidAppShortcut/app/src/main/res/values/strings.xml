@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AndroidAppShortcut</string>
+    <string name="add_new_website">ADD NEW WEBSITE</string>
+    <string name="existing_shortcuts">EXISTING SHORTCUTS</string>
 </resources>
